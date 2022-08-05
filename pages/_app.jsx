@@ -1,6 +1,6 @@
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
-import ThemeProvider from "../contexts/ThemeProvider";
+import ThemeProvider from "../styles/ThemeProvider";
 
 export default function App({
   Component,

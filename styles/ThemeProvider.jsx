@@ -1,11 +1,12 @@
 import { ColorSchemeProvider, Global, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { node } from "prop-types";
+import colors from "./colors";
 
 const ThemeProvider = ({ children }) => {
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "color-scheme",
-    defaultValue: "dark",
+    defaultValue: "light",
     getInitialValueInEffect: true,
   });
 
@@ -20,7 +21,21 @@ const ThemeProvider = ({ children }) => {
       <MantineProvider
         withNormalizeCSS
         withGlobalStyles
-        theme={{ colorScheme }}
+        theme={{
+          black: "#010409",
+          white: "#ffffff",
+          shadows: {
+            xl: "0px 5px 20px rgba(0, 0, 0, .3)",
+          },
+          colorScheme,
+          colors: {
+            ...colors,
+          },
+          primaryShade: {
+            light: 4,
+            dark: 4,
+          }
+        }}
       >
         <Global
           styles={(theme) => ({
@@ -28,7 +43,7 @@ const ThemeProvider = ({ children }) => {
               backgroundColor:
                 theme.colorScheme === "dark"
                   ? theme.colors.dark[9]
-                  : theme.colors.gray[0],
+                  : theme.white,
             },
           })}
         />

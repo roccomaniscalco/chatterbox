@@ -4,6 +4,7 @@ import {
   Avatar,
   Center,
   Group,
+  Indicator,
   Navbar,
   Popover,
   Text,
@@ -22,16 +23,53 @@ const UserProfileAvatar = () => {
   };
 
   return (
-    <Popover position="right-start" offset={12}>
+    <Popover
+      position="right-start"
+      offset={10}
+      withArrow
+      arrowOffset={20}
+      arrowSize={16}
+      styles={(theme) => ({
+        dropdown: {
+          width: "min-content",
+          boxShadow: theme.shadows.xl,
+          backgroundColor:
+            theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+          borderColor:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[6]
+              : theme.colors.gray[0],
+        },
+        arrow: {
+          borderColor:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[6]
+              : theme.colors.gray[0],
+        },
+      })}
+    >
       <Popover.Target>
-        <Avatar
-          src={session.user.image}
-          size="lg"
-          radius="xl"
-          component={ActionIcon}
-        />
+        <ActionIcon size={64} radius="xl">
+          <Indicator
+            offset={8}
+            size={16}
+            color="green"
+            styles={(theme) => ({
+              indicator: {
+                borderWidth: 3,
+                borderStyle: "solid",
+                borderColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[8]
+                    : theme.colors.gray[2],
+              },
+            })}
+          >
+            <Avatar src={session.user.image} size="lg" radius="xl" />
+          </Indicator>
+        </ActionIcon>
       </Popover.Target>
-      <Popover.Dropdown sx={{ width: "min-content" }}>
+      <Popover.Dropdown>
         <Text weight="bold">{session.user.name}</Text>
         <Text size="sm" color="dimmed">
           {session.user.email}
@@ -39,7 +77,7 @@ const UserProfileAvatar = () => {
 
         <UnstyledButton
           onClick={handleSignOut}
-          pt="lg"
+          mt="lg"
           sx={(theme) => ({
             color:
               theme.colorScheme === "dark"
@@ -67,12 +105,16 @@ const AppNavbar = () => {
   return (
     <Navbar
       p="md"
+      width={{ base: 80 }}
       sx={(theme) => ({
-        width: 96,
         backgroundColor:
           theme.colorScheme === "dark"
             ? theme.colors.dark[8]
-            : theme.colors.gray[1],
+            : theme.colors.gray[2],
+        borderColor:
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[7]
+            : theme.colors.gray[3],
       })}
     >
       <Center>
