@@ -3,19 +3,21 @@ import {
   Anchor,
   AppShell,
   Avatar,
-  Center,
   Group,
   Indicator,
   Navbar,
   Popover,
+  Stack,
   Text,
-  UnstyledButton
+  UnstyledButton,
 } from "@mantine/core";
 import { IconLogout } from "@tabler/icons";
 import { unstable_getServerSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import DarkModeToggle from "../components/DarkModeToggle";
+import IconChatterbox from "../components/IconChatterbox";
 
 const UserProfileAvatar = () => {
   const { data: session } = useSession();
@@ -112,21 +114,45 @@ const AppNavbar = () => {
         backgroundColor:
           theme.colorScheme === "dark"
             ? theme.colors.dark[8]
-            : theme.colors.gray[0],
+            : theme.colors.gray[1],
         borderColor:
           theme.colorScheme === "dark"
             ? theme.colors.dark[7]
-            : theme.colors.gray[1],
+            : theme.colors.gray[2],
       })}
     >
-      <Center>
+      <Stack align="center" spacing="sm">
+        <Link href="/">
+          <ActionIcon
+            variant="transparent"
+            size="xl"
+            sx={(theme) => ({
+              color:
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[4]
+                  : theme.colors.gray[6],
+              transition: "transform 0.2s",
+              "&:hover": {
+                color: theme.colors.indigo[5],
+                transform: "scale(1.1)",
+              },
+            })}
+          >
+            <IconChatterbox size={64} />
+          </ActionIcon>
+        </Link>
         <UserProfileAvatar />
-      </Center>
+      </Stack>
 
       <Navbar.Section grow></Navbar.Section>
 
       <DarkModeToggle />
-      <Anchor size="xs" color="dimmed" align="center" href="">
+      <Anchor
+        size="xs"
+        color="dimmed"
+        align="center"
+        href="https://github.com/roccomaniscalco/chatterbox"
+      >
         v0.0.1
       </Anchor>
     </Navbar>
