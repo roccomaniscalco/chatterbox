@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Anchor,
   AppShell,
   Avatar,
   Center,
@@ -7,12 +8,14 @@ import {
   Indicator,
   Navbar,
   Popover,
+  Stack,
   Text,
   UnstyledButton,
 } from "@mantine/core";
 import { IconLogout } from "@tabler/icons";
 import { unstable_getServerSession } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
+import DarkModeToggle from "../components/DarkModeToggle";
 import { authOptions } from "./api/auth/[...nextAuth]";
 
 const UserProfileAvatar = () => {
@@ -61,7 +64,7 @@ const UserProfileAvatar = () => {
                 borderColor:
                   theme.colorScheme === "dark"
                     ? theme.colors.dark[8]
-                    : theme.colors.gray[2],
+                    : theme.colors.gray[1],
               },
             })}
           >
@@ -110,16 +113,24 @@ const AppNavbar = () => {
         backgroundColor:
           theme.colorScheme === "dark"
             ? theme.colors.dark[8]
-            : theme.colors.gray[2],
+            : theme.colors.gray[0],
         borderColor:
           theme.colorScheme === "dark"
             ? theme.colors.dark[7]
-            : theme.colors.gray[3],
+            : theme.colors.gray[1],
       })}
     >
-      <Center>
-        <UserProfileAvatar />
-      </Center>
+
+        <Center>
+          <UserProfileAvatar />
+        </Center>
+
+      <Navbar.Section grow></Navbar.Section>
+
+      <DarkModeToggle />
+      <Anchor size="xs" color="dimmed" align="center" href="">
+        v0.0.1
+      </Anchor>
     </Navbar>
   );
 };
