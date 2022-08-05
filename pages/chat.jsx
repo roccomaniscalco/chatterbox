@@ -8,15 +8,14 @@ import {
   Indicator,
   Navbar,
   Popover,
-  Stack,
   Text,
-  UnstyledButton,
+  UnstyledButton
 } from "@mantine/core";
 import { IconLogout } from "@tabler/icons";
 import { unstable_getServerSession } from "next-auth";
+import GithubProvider from "next-auth/providers/github";
 import { signOut, useSession } from "next-auth/react";
 import DarkModeToggle from "../components/DarkModeToggle";
-import { authOptions } from "./api/auth/[...nextAuth]";
 
 const UserProfileAvatar = () => {
   const { data: session } = useSession();
@@ -120,10 +119,9 @@ const AppNavbar = () => {
             : theme.colors.gray[1],
       })}
     >
-
-        <Center>
-          <UserProfileAvatar />
-        </Center>
+      <Center>
+        <UserProfileAvatar />
+      </Center>
 
       <Navbar.Section grow></Navbar.Section>
 
@@ -146,7 +144,14 @@ const Chat = () => {
 };
 
 export async function getServerSideProps({ req, res }) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await unstable_getServerSession(req, res, {
+    providers: [
+      GithubProvider({
+        clientId: process.env.GITHUB_ID,
+        clientSecret: process.env.GITHUB_SECRET,
+      }),
+    ],
+  });
 
   if (!session)
     return {
