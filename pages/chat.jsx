@@ -1,70 +1,109 @@
 import {
+  ActionIcon,
   AppShell,
-  Aside,
-  Burger,
-  Header,
-  MediaQuery,
+  Avatar,
+  Center,
+  Group,
   Navbar,
+  Popover,
   Text,
-  useMantineTheme,
+  UnstyledButton,
 } from "@mantine/core";
-import { useState } from "react";
+import { IconLogout } from "@tabler/icons";
+import { unstable_getServerSession } from "next-auth";
+import { signOut, useSession } from "next-auth/react";
+import { authOptions } from "./api/auth/[...nextAuth]";
 
-const Chat = () => {
-  const theme = useMantineTheme();
-  const [opened, setOpened] = useState(false);
+const UserProfileAvatar = () => {
+  const { data: session } = useSession();
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
   return (
-    <AppShell
-      styles={{
-        main: {
-          background:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-        },
-      }}
-      navbarOffsetBreakpoint="sm"
-      asideOffsetBreakpoint="sm"
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
-          <Text>Application navbar</Text>
-        </Navbar>
-      }
-      aside={
-        <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-          <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-            <Text>Application sidebar</Text>
-          </Aside>
-        </MediaQuery>
-      }
-      header={
-        <Header height={70} p="md">
-          <div
-            style={{ display: "flex", alignItems: "center", height: "100%" }}
-          >
-            <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size="sm"
-                color={theme.colors.gray[6]}
-                mr="xl"
-              />
-            </MediaQuery>
+    <Popover position="right-start" offset={12}>
+      <Popover.Target>
+        <Avatar
+          src={session.user.image}
+          size="lg"
+          radius="xl"
+          component={ActionIcon}
+        />
+      </Popover.Target>
+      <Popover.Dropdown sx={{ width: "min-content" }}>
+        <Text weight="bold">{session.user.name}</Text>
+        <Text size="sm" color="dimmed">
+          {session.user.email}
+        </Text>
 
-            <Text>Application header</Text>
-          </div>
-        </Header>
-      }
-    >
-      <Text>Resize app to see responsive navbar in action</Text>
-    </AppShell>
+        <UnstyledButton
+          onClick={handleSignOut}
+          pt="lg"
+          sx={(theme) => ({
+            color:
+              theme.colorScheme === "dark"
+                ? theme.colors.indigo[3]
+                : theme.colors.indigo[6],
+            "&:hover": {
+              color:
+                theme.colorScheme === "dark"
+                  ? theme.colors.indigo[4]
+                  : theme.colors.indigo[7],
+            },
+          })}
+        >
+          <Group spacing="xs">
+            <IconLogout size={16} />
+            <Text size="sm">Sign Out</Text>
+          </Group>
+        </UnstyledButton>
+      </Popover.Dropdown>
+    </Popover>
   );
 };
+
+const AppNavbar = () => {
+  return (
+    <Navbar
+      p="md"
+      sx={(theme) => ({
+        width: 96,
+        backgroundColor:
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[8]
+            : theme.colors.gray[1],
+      })}
+    >
+      <Center>
+        <UserProfileAvatar />
+      </Center>
+    </Navbar>
+  );
+};
+
+const Chat = () => {
+  return (
+    <AppShell
+      navbarOffsetBreakpoint="sm"
+      asideOffsetBreakpoint="sm"
+      navbar={<AppNavbar />}
+    ></AppShell>
+  );
+};
+
+export async function getServerSideProps({ req, res }) {
+  const session = await unstable_getServerSession(req, res, authOptions);
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
+  return { props: { session } };
+}
 
 export default Chat;
