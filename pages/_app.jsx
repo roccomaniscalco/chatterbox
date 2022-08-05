@@ -2,10 +2,9 @@ import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
 import ThemeProvider from "../styles/ThemeProvider";
 
-export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
-}) {
+const App = ({ Component, pageProps: { session, ...pageProps } }) => {
+  const getLayout = Component.getLayout || ((page) => page);
+
   return (
     <>
       <Head>
@@ -13,9 +12,11 @@ export default function App({
       </Head>
       <ThemeProvider>
         <SessionProvider session={session}>
-          <Component {...pageProps} />
+          {getLayout(<Component {...pageProps} />)}
         </SessionProvider>
       </ThemeProvider>
     </>
   );
-}
+};
+
+export default App;

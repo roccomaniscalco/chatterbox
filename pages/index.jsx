@@ -1,6 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 
-export default function Index() {
+const Index = () => {
   const { data: session } = useSession();
 
   if (session) {
@@ -18,3 +18,5 @@ export default function Index() {
     </>
   );
 }
+
+export default Index;

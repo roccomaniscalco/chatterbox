@@ -32,12 +32,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function DarkModeToggle() {
+const DarkModeToggle = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const { classes, cx } = useStyles();
 
   return (
-    <Group position="center" my="md">
+    <Group position="center">
       <div className={classes.root}>
         <IconSun
           className={cx(classes.icon, classes.iconLight)}
@@ -51,7 +51,7 @@ export default function DarkModeToggle() {
         />
         <Switch
           color="indigo"
-          classNames={{input: classes.input}}
+          classNames={{ input: classes.input }}
           checked={colorScheme === "light"}
           onChange={() => toggleColorScheme()}
           size="md"
@@ -59,4 +59,6 @@ export default function DarkModeToggle() {
       </div>
     </Group>
   );
-}
+};
+
+export default DarkModeToggle;
