@@ -1,7 +1,8 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 
-export default function Home() {
+export default function Index() {
   const { data: session } = useSession();
+
   if (session) {
     return (
       <>
@@ -13,7 +14,7 @@ export default function Home() {
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <button onClick={() => signIn("github", { callbackUrl: "/chat"})}>Sign in</button>
     </>
   );
 }
