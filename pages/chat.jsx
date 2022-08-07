@@ -1,5 +1,5 @@
 import { unstable_getServerSession } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
+import { authOptions } from "../config";
 import ChatLayout from "../layouts/chat/ChatLayout";
 
 const Chat = () => {
@@ -120,14 +120,7 @@ Chat.getLayout = (page) => {
 };
 
 export const getServerSideProps = async ({ req, res }) => {
-  const session = await unstable_getServerSession(req, res, {
-    providers: [
-      GithubProvider({
-        clientId: process.env.GITHUB_ID,
-        clientSecret: process.env.GITHUB_SECRET,
-      }),
-    ],
-  });
+  const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session)
     return {

@@ -8,7 +8,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { IconLogout } from "@tabler/icons";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const UserProfile = () => {
   const { data: session } = useSession();
