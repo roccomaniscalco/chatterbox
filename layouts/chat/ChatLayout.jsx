@@ -29,11 +29,8 @@ const ChatHeader = () => {
 const ChatLayout = ({ children }) => {
   return (
     <AppShell
-      navbarOffsetBreakpoint="sm"
-      asideOffsetBreakpoint="sm"
       header={<ChatHeader />}
       navbar={<ChatNavbar width={NAVBAR_WIDTH} headerHeight={HEADER_HEIGHT} />}
-      styles={{ main: { zIndex: -1 } }}
     >
       {/* <ChatHeader /> */}
       {children}
