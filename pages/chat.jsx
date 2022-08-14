@@ -1,11 +1,12 @@
 import { Avatar, createStyles, Stack, Text, TextInput } from "@mantine/core";
-import { getHotkeyHandler } from "@mantine/hooks";
+import { getHotkeyHandler, useScrollIntoView } from "@mantine/hooks";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import { io } from "socket.io-client";
-import { authOptions } from "../config";
 import ChatLayout from "../components/ChatLayout";
+import { authOptions } from "../config";
 
 let socket;
 
@@ -20,11 +21,11 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     justifyContent: "end",
     ["." + getRef("messageBubble")]: {
       backgroundColor:
-      theme.colors[theme.primaryColor][theme.fn.primaryShade()],
+        theme.colors[theme.primaryColor][theme.fn.primaryShade()],
       color: theme.white,
       borderRadius: "20px 0px 20px 20px",
     },
-    "> *": {
+    "& > div": {
       alignItems: "end",
     },
   },
@@ -33,6 +34,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     minWidth: "min-content",
     maxWidth: "max-content",
     width: "100%",
+    overflowWrap: "anywhere",
     borderRadius: "0px 25px 25px 25px",
     paddingBlock: theme.spacing.sm,
     paddingInline: theme.spacing.md,
@@ -45,14 +47,13 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 const Chat = () => {
   const { classes, cx } = useStyles();
+  const { scrollIntoView: scrollToLastMessage, targetRef: lastMessageRef } =
+    useScrollIntoView({ duration: 600 });
   const { data: session } = useSession();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
-  useEffect(() => {
-    socketInitializer();
-  }, []);
 
-  const socketInitializer = async () => {
+  const socketInitializer = useCallback(async () => {
     await fetch("/api/socket");
     socket = io();
 
@@ -61,9 +62,15 @@ const Chat = () => {
     });
 
     socket.on("message", (msg) => {
-      setMessages((prevMsgs) => [...prevMsgs, msg]);
+      flushSync(() => setMessages((prevMsgs) => [...prevMsgs, msg]));
+      scrollToLastMessage();
     });
-  };
+  }, [scrollToLastMessage]);
+
+  useEffect(() => {
+    console.count("useEffect ran");
+    socketInitializer();
+  }, [socketInitializer]);
 
   const handleChange = (e) => {
     setInput(e.target.value);
@@ -77,20 +84,21 @@ const Chat = () => {
 
   return (
     <>
-      <Stack spacing="xl" mb={70}>
+      <Stack spacing="xl" pb={70}>
         {messages.map((msg, i) => (
           <div
-            key={i}
+            ref={i === messages.length - 1 ? lastMessageRef : null}
             className={cx(
               classes.messageWrapper,
               session.user.email === msg.user.email && classes.myMessageWrapper
             )}
+            key={i}
           >
             <Avatar size="md" radius="xl" src={msg.user.image} />
-            <Stack spacing={6}>
+            <Stack spacing={6} sx={{ flex: 1 }}>
               <Text size="xs">{msg.user.name}</Text>
               <div className={cx(classes.messageBubble)}>
-                <Text>{msg.text}</Text>
+                <Text sx={{}}>{msg.text}</Text>
               </div>
             </Stack>
           </div>
