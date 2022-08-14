@@ -1,21 +1,11 @@
-import {
-  Avatar,
-  Box,
-  Card,
-  createStyles,
-  Group,
-  Paper,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { Avatar, createStyles, Stack, Text, TextInput } from "@mantine/core";
+import { getHotkeyHandler } from "@mantine/hooks";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { authOptions } from "../config";
-import ChatLayout from "../layouts/chat/ChatLayout";
+import ChatLayout from "../components/ChatLayout";
 
 let socket;
 
@@ -28,16 +18,14 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   myMessageWrapper: {
     flexDirection: "row-reverse",
     justifyContent: "end",
-
-    "> *": {
-      alignItems: "end",
-    },
-
     ["." + getRef("messageBubble")]: {
       backgroundColor:
-        theme.colors[theme.primaryColor][theme.fn.primaryShade()],
+      theme.colors[theme.primaryColor][theme.fn.primaryShade()],
       color: theme.white,
-      borderRadius: "25px 0px 25px 25px",
+      borderRadius: "20px 0px 20px 20px",
+    },
+    "> *": {
+      alignItems: "end",
     },
   },
   messageBubble: {
@@ -46,8 +34,8 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     maxWidth: "max-content",
     width: "100%",
     borderRadius: "0px 25px 25px 25px",
-    paddingBlock: theme.spacing.md,
-    paddingInline: theme.spacing.lg,
+    paddingBlock: theme.spacing.sm,
+    paddingInline: theme.spacing.md,
     backgroundColor:
       theme.colorScheme === "dark"
         ? theme.colors.dark[7]
@@ -89,7 +77,7 @@ const Chat = () => {
 
   return (
     <>
-      <Stack spacing="xl">
+      <Stack spacing="xl" mb={70}>
         {messages.map((msg, i) => (
           <div
             key={i}

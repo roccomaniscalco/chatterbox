@@ -2,7 +2,7 @@ import { ActionIcon, Anchor, Center, Navbar, Stack } from "@mantine/core";
 import Link from "next/link";
 import { number } from "prop-types";
 import DarkModeToggle from "./DarkModeToggle";
-import IconChatterbox from "../../components/_common/IconChatterbox";
+import IconChatterbox from "./IconChatterbox";
 import UserProfile from "./UserProfile";
 
 const ChatNavbar = ({ width, headerHeight }) => {
