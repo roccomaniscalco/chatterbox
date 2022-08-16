@@ -75,7 +75,6 @@ const MessageInput = ({ sendMessage }) => {
       rightSection={
         <ActionIcon
           onClick={handleSubmit}
-          variant="subtle"
           disabled={value.length < 1}
           className={classes.submitButton}
         >

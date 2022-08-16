@@ -1,8 +1,14 @@
+import { getCookie } from "cookies-next";
 import { SessionProvider } from "next-auth/react";
+import App from "next/app";
 import Head from "next/head";
 import ThemeProvider from "../styles/ThemeProvider";
 
-const App = ({ Component, pageProps: { session, ...pageProps } }) => {
+const MyApp = ({
+  Component,
+  colorScheme,
+  pageProps: { session, ...pageProps },
+}) => {
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
@@ -10,7 +16,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
       <Head>
         <title>chatterbox</title>
       </Head>
-      <ThemeProvider>
+      <ThemeProvider initialColorScheme={colorScheme}>
         <SessionProvider session={session}>
           {getLayout(<Component {...pageProps} />)}
         </SessionProvider>
@@ -19,4 +25,11 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   );
 };
 
-export default App;
+MyApp.getInitialProps = async (context) => {
+  const appProps = await App.getInitialProps(context);
+  return {
+    ...appProps,
+    colorScheme: getCookie("color-scheme", context.ctx) || "light",
+  };
+};
+export default MyApp;

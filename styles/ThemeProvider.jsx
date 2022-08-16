@@ -1,17 +1,21 @@
 import { ColorSchemeProvider, Global, MantineProvider } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
+import { setCookie } from "cookies-next";
 import { node } from "prop-types";
+import { useState } from "react";
 import colors from "./colors";
 
-const ThemeProvider = ({ children }) => {
-  const [colorScheme, setColorScheme] = useLocalStorage({
-    key: "color-scheme",
-    defaultValue: "light",
-    getInitialValueInEffect: true,
-  });
+const ThemeProvider = ({ children, initialColorScheme }) => {
+  const [colorScheme, setColorScheme] = useState(initialColorScheme);
 
-  const toggleColorScheme = () =>
-    setColorScheme(colorScheme === "dark" ? "light" : "dark");
+  const toggleColorScheme = (value) => {
+    const nextColorScheme =
+      value || (colorScheme === "dark" ? "light" : "dark");
+    setColorScheme(nextColorScheme);
+    // when color scheme is updated save it to cookie
+    setCookie("color-scheme", nextColorScheme, {
+      maxAge: 60 * 60 * 24 * 30,
+    });
+  };
 
   return (
     <ColorSchemeProvider
