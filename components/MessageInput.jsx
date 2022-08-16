@@ -1,6 +1,8 @@
-import { createStyles, Textarea } from "@mantine/core";
-import { getHotkeyHandler } from "@mantine/hooks";
-import { func, string } from "prop-types";
+import { ActionIcon, createStyles, Textarea, Tooltip } from "@mantine/core";
+import { getHotkeyHandler, useWindowEvent } from "@mantine/hooks";
+import { IconSend } from "@tabler/icons";
+import { func } from "prop-types";
+import { useRef, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -17,11 +19,11 @@ const useStyles = createStyles((theme) => ({
       theme.colorScheme === "dark"
         ? theme.colors.dark[7]
         : theme.colors.gray[2],
-    "&:focus": {
+    "&:focus, &:focus-within": {
       borderColor:
         theme.colorScheme === "dark"
-          ? theme.colors.dark[5]
-          : theme.colors.gray[5],
+          ? `${theme.colors.dark[5]} !important`
+          : `${theme.colors.gray[5]} !important`,
     },
     "&::placeholder": {
       color:
@@ -33,29 +35,72 @@ const useStyles = createStyles((theme) => ({
     // must be used with autosize true and no maxRows
     overflow: "hidden",
   },
+  submitButton: {
+    backgroundColor: theme.fn.primaryColor(),
+    color: theme.white,
+    "&:hover": {
+      backgroundColor: theme.fn.primaryColor(),
+      color: theme.white,
+    },
+    ":disabled": {
+      backgroundColor: "transparent",
+      color:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[5]
+          : theme.colors.gray[5],
+    },
+  },
 }));
 
-const MessageInput = ({ input, handleChange, sendMessage }) => {
+const MessageInput = ({ sendMessage }) => {
   const { classes } = useStyles();
+  const [value, setValue] = useState("");
+  const textAreaRef = useRef();
+  useWindowEvent("keypress", (e) => {
+    if (e.key === "Enter") return;
+    textAreaRef.current.focus();
+  });
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    sendMessage(value);
+    setValue("");
+  };
+
   return (
     <Textarea
-      value={input}
+      rightSection={
+        <ActionIcon
+          onClick={handleSubmit}
+          variant="subtle"
+          disabled={value.length < 1}
+          className={classes.submitButton}
+        >
+          <IconSend size={16} />
+        </ActionIcon>
+      }
+      rightSectionWidth={47}
+      rightSectionProps={{ style: { height: 47 } }}
+      value={value}
       onChange={handleChange}
-      onKeyDown={getHotkeyHandler([["Enter", sendMessage]])}
+      onKeyDown={getHotkeyHandler([["Enter", handleSubmit]])}
       size="md"
+      variant="filled"
       autosize
       minRows={1}
       placeholder="Send a message"
       aria-label="Message input"
       autoComplete="off"
-      classNames={classes}
+      classNames={{ root: classes.root, input: classes.input }}
+      ref={textAreaRef}
     />
   );
 };
 
 MessageInput.propTypes = {
-  input: string.isRequired,
-  handleChange: func.isRequired,
   sendMessage: func.isRequired,
 };
 

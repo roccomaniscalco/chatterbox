@@ -16,7 +16,6 @@ const Chat = () => {
   const { scrollIntoView: scrollToLastMessage, targetRef: lastMessageRef } =
     useScrollIntoView({ duration: 500 });
   const { data: session } = useSession();
-  const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
 
   const socketInitializer = useCallback(async () => {
@@ -37,20 +36,18 @@ const Chat = () => {
     socketInitializer();
   }, [socketInitializer]);
 
-  const handleChange = (e) => {
-    setInput(e.target.value);
-  };
-
-  const sendMessage = async () => {
-    const trimmedInput = input.trim()
-    if (trimmedInput.length < 1) return;
-    socket.emit("message", {
-      text: trimmedInput,
-      user: session.user,
-      sentAt: Date.now(),
-    });
-    setInput("");
-  };
+  const sendMessage = useCallback(
+    async (msg) => {
+      const trimmedInput = msg.trim();
+      if (trimmedInput.length < 1) return;
+      socket.emit("message", {
+        text: trimmedInput,
+        user: session.user,
+        sentAt: Date.now(),
+      });
+    },
+    [session]
+  );
 
   return (
     <>
@@ -65,11 +62,7 @@ const Chat = () => {
         ))}
       </Stack>
 
-      <MessageInput
-        input={input}
-        handleChange={handleChange}
-        sendMessage={sendMessage}
-      />
+      <MessageInput sendMessage={sendMessage} />
     </>
   );
 };

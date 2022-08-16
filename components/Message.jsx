@@ -18,8 +18,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     flexDirection: "row-reverse",
     justifyContent: "end",
     ["." + getRef("messageBubble")]: {
-      backgroundColor:
-        theme.colors[theme.primaryColor][theme.fn.primaryShade()],
+      backgroundColor: theme.fn.primaryColor(),
       color: theme.white,
       borderTopLeftRadius: theme.radius.xl,
       borderTopRightRadius: 0,
@@ -115,4 +114,4 @@ Message.propTypes = {
 
 Message.displayName = "Message";
 
-export default Message
+export default Message;
