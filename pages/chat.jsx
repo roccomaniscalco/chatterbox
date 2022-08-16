@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  createStyles,
-  Group,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { Stack, Textarea, TextInput } from "@mantine/core";
 import { getHotkeyHandler, useScrollIntoView } from "@mantine/hooks";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -13,63 +6,12 @@ import { useCallback, useEffect, useState } from "react";
 import { flushSync } from "react-dom";
 import { io } from "socket.io-client";
 import ChatLayout from "../components/ChatLayout";
+import Message from "../components/Message";
 import { authOptions } from "../config";
 
-const shortTime = Intl.DateTimeFormat("en", {
-  timeStyle: "short",
-});
 let socket;
 
-const useStyles = createStyles((theme, _params, getRef) => ({
-  messageWrapper: {
-    alignItems: "start",
-    display: "flex",
-    gap: theme.spacing.xs,
-    paddingBottom: 4,
-    "&:hover > div": {
-      opacity: 1,
-    },
-  },
-
-  userMessageWrapper: {
-    flexDirection: "row-reverse",
-    justifyContent: "end",
-    ["." + getRef("messageBubble")]: {
-      backgroundColor:
-        theme.colors[theme.primaryColor][theme.fn.primaryShade()],
-      color: theme.white,
-      borderTopLeftRadius: theme.radius.xl,
-      borderTopRightRadius: 0,
-    },
-    "& > div": {
-      alignItems: "end",
-      textAlign: "left",
-      div: {
-        flexDirection: "row-reverse",
-      },
-    },
-  },
-
-  messageBubble: {
-    ref: getRef("messageBubble"),
-    minWidth: "min-content",
-    maxWidth: "max-content",
-    width: "100%",
-    flex: 1,
-    overflowWrap: "anywhere",
-    borderRadius: theme.radius.xl,
-    borderTopLeftRadius: 0,
-    paddingBlock: theme.spacing.xs,
-    paddingInline: theme.spacing.md,
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[7]
-        : theme.colors.gray[2],
-  },
-}));
-
 const Chat = () => {
-  const { classes, cx } = useStyles();
   const { scrollIntoView: scrollToLastMessage, targetRef: lastMessageRef } =
     useScrollIntoView({ duration: 500 });
   const { data: session } = useSession();
@@ -108,58 +50,57 @@ const Chat = () => {
     setInput("");
   };
 
-  const isUserMessage = (msg) => msg?.user.email === session.user.email;
-
   return (
     <>
-      <Stack spacing={0} pb={70}>
+      <Stack spacing={0} pb={60}>
         {messages.map((msg, i) => (
-          <div
+          <Message
+            msg={msg}
+            prevMsg={messages[i - 1]}
             ref={i === messages.length - 1 ? lastMessageRef : null}
-            className={cx(
-              classes.messageWrapper,
-              isUserMessage(msg) && classes.userMessageWrapper
-            )}
             key={i}
-          >
-            {isUserMessage(messages[i - 1]) ? (
-              <>
-                <Text size="xs" align="right" sx={{ width: 38, opacity: 0 }}>
-                  {shortTime.format(msg.sentAt).substring(0, 5)}
-                </Text>
-                <div className={classes.messageBubble}>
-                  <Text>{msg.text}</Text>
-                </div>
-              </>
-            ) : (
-              <>
-                <Avatar size="md" radius="xl" src={msg.user.image} />
-                <Stack spacing={6} sx={{ flex: 1 }}>
-                  <Group spacing="sm" align="baseline">
-                    <Text size="sm" weight="bold">
-                      {msg.user.name}
-                    </Text>
-                    <Text size="xs">{shortTime.format(msg.sentAt)}</Text>
-                  </Group>
-                  <div className={classes.messageBubble}>
-                    <Text>{msg.text}</Text>
-                  </div>
-                </Stack>
-              </>
-            )}
-          </div>
+          />
         ))}
       </Stack>
 
-      <TextInput
+      <Textarea
         value={input}
         onChange={handleChange}
         onKeyDown={getHotkeyHandler([["Enter", sendMessage]])}
         size="md"
+        autosize
+        minRows={2}
         placeholder="Send a message"
         aria-label="Message input"
-        autocomplete="off"
-        sx={{ position: "fixed", bottom: 16, width: "calc(100% - 112px)" }}
+        autoComplete="off"
+        styles={(theme) => ({
+          root: {
+            position: "fixed",
+            bottom: 16,
+            width: "calc(100% - 112px)",
+          },
+          input: {
+            backgroundColor:
+              theme.colorScheme === "dark" ? theme.colors.dark[9] : theme.white,
+            borderColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[7]
+                : theme.colors.gray[2],
+            "&:focus": {
+              backgroundColor:
+                theme.colorScheme === "dark" ? theme.black : theme.white,
+              borderColor:
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[7]
+                  : theme.colors.gray[2],
+              boxShadow:
+                theme.colorScheme === "dark" ? "none" : theme.shadows.xl,
+            },
+            // stop scroll bar flashing when a new row is types
+            // must be used with autosize true and no maxRows
+            overflow: "hidden",
+          },
+        })}
       />
     </>
   );
