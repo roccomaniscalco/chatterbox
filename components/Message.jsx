@@ -9,7 +9,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     display: "flex",
     gap: theme.spacing.xs,
     paddingBottom: 4,
-    "&:hover > div": {
+    [`&:hover .${getRef("startAt")}`]: {
       opacity: 1,
     },
   },
@@ -23,12 +23,8 @@ const useStyles = createStyles((theme, _params, getRef) => ({
       borderTopLeftRadius: theme.radius.xl,
       borderTopRightRadius: 0,
     },
-    "& > div": {
-      alignItems: "end",
+    [`.${getRef("startAt")}`]: {
       textAlign: "left",
-      div: {
-        flexDirection: "row-reverse",
-      },
     },
   },
 
@@ -47,6 +43,13 @@ const useStyles = createStyles((theme, _params, getRef) => ({
       theme.colorScheme === "dark"
         ? theme.colors.dark[7]
         : theme.colors.gray[2],
+  },
+
+  startAt: {
+    ref: getRef("startAt"),
+    textAlign: "right",
+    width: 38,
+    opacity: 0,
   },
 }));
 
@@ -70,7 +73,7 @@ const Message = forwardRef(({ msg, prevMsg }, ref) => {
     >
       {isUserMessage(prevMsg) ? (
         <>
-          <Text size="xs" align="right" sx={{ width: 38, opacity: 0 }}>
+          <Text size="xs" align="right" className={classes.startAt}>
             {shortTime.format(msg.sentAt).substring(0, 5)}
           </Text>
           <div className={classes.messageBubble}>
@@ -80,8 +83,14 @@ const Message = forwardRef(({ msg, prevMsg }, ref) => {
       ) : (
         <>
           <Avatar size="md" radius="xl" src={msg.user.image} />
-          <Stack spacing={6} sx={{ flex: 1 }}>
-            <Group spacing="xs" align="baseline">
+          <Stack spacing={6}>
+            <Group
+              spacing="xs"
+              align="baseline"
+              sx={{
+                flexDirection: isUserMessage(msg) ? "row-reverse" : "start",
+              }}
+            >
               <Text size="sm" weight="bold">
                 {msg.user.name}
               </Text>

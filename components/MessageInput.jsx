@@ -31,7 +31,7 @@ const useStyles = createStyles((theme) => ({
           ? theme.colors.dark[5]
           : theme.colors.gray[5],
     },
-    // stop scroll bar flashing when a new row is types
+    // stop scroll bar flashing when a new row is typed
     // must be used with autosize true and no maxRows
     overflow: "hidden",
   },

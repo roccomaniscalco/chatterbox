@@ -50,7 +50,6 @@ const DarkModeToggle = () => {
           stroke={1.5}
         />
         <Switch
-          color="indigo"
           classNames={{ input: classes.input }}
           checked={colorScheme === "light"}
           onChange={() => toggleColorScheme()}
