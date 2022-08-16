@@ -1,4 +1,11 @@
-import { Avatar, createStyles, Stack, Text, TextInput } from "@mantine/core";
+import {
+  Avatar,
+  createStyles,
+  Group,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { getHotkeyHandler, useScrollIntoView } from "@mantine/hooks";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -8,6 +15,9 @@ import { io } from "socket.io-client";
 import ChatLayout from "../components/ChatLayout";
 import { authOptions } from "../config";
 
+const shortTime = Intl.DateTimeFormat("en", {
+  timeStyle: "short",
+});
 let socket;
 
 const useStyles = createStyles((theme, _params, getRef) => ({
@@ -15,28 +25,41 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     alignItems: "start",
     display: "flex",
     gap: theme.spacing.xs,
+    paddingBottom: 4,
+    "&:hover > div": {
+      opacity: 1,
+    },
   },
-  myMessageWrapper: {
+
+  userMessageWrapper: {
     flexDirection: "row-reverse",
     justifyContent: "end",
     ["." + getRef("messageBubble")]: {
       backgroundColor:
         theme.colors[theme.primaryColor][theme.fn.primaryShade()],
       color: theme.white,
-      borderRadius: "20px 0px 20px 20px",
+      borderTopLeftRadius: theme.radius.xl,
+      borderTopRightRadius: 0,
     },
     "& > div": {
       alignItems: "end",
+      textAlign: "left",
+      div: {
+        flexDirection: "row-reverse",
+      },
     },
   },
+
   messageBubble: {
     ref: getRef("messageBubble"),
     minWidth: "min-content",
     maxWidth: "max-content",
     width: "100%",
+    flex: 1,
     overflowWrap: "anywhere",
-    borderRadius: "0px 25px 25px 25px",
-    paddingBlock: theme.spacing.sm,
+    borderRadius: theme.radius.xl,
+    borderTopLeftRadius: 0,
+    paddingBlock: theme.spacing.xs,
     paddingInline: theme.spacing.md,
     backgroundColor:
       theme.colorScheme === "dark"
@@ -48,7 +71,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 const Chat = () => {
   const { classes, cx } = useStyles();
   const { scrollIntoView: scrollToLastMessage, targetRef: lastMessageRef } =
-    useScrollIntoView({ duration: 600 });
+    useScrollIntoView({ duration: 500 });
   const { data: session } = useSession();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -68,7 +91,6 @@ const Chat = () => {
   }, [scrollToLastMessage]);
 
   useEffect(() => {
-    console.count("useEffect ran");
     socketInitializer();
   }, [socketInitializer]);
 
@@ -78,29 +100,53 @@ const Chat = () => {
 
   const sendMessage = async () => {
     if (input.length < 1) return;
-    socket.emit("message", { text: input, user: session.user });
+    socket.emit("message", {
+      text: input,
+      user: session.user,
+      sentAt: Date.now(),
+    });
     setInput("");
   };
 
+  const isUserMessage = (msg) => msg?.user.email === session.user.email;
+
   return (
     <>
-      <Stack spacing="xl" pb={70}>
+      <Stack spacing={0} pb={70}>
         {messages.map((msg, i) => (
           <div
             ref={i === messages.length - 1 ? lastMessageRef : null}
             className={cx(
               classes.messageWrapper,
-              session.user.email === msg.user.email && classes.myMessageWrapper
+              isUserMessage(msg) && classes.userMessageWrapper
             )}
             key={i}
           >
-            <Avatar size="md" radius="xl" src={msg.user.image} />
-            <Stack spacing={6} sx={{ flex: 1 }}>
-              <Text size="xs">{msg.user.name}</Text>
-              <div className={cx(classes.messageBubble)}>
-                <Text sx={{}}>{msg.text}</Text>
-              </div>
-            </Stack>
+            {isUserMessage(messages[i - 1]) ? (
+              <>
+                <Text size="xs" align="right" sx={{ width: 38, opacity: 0 }}>
+                  {shortTime.format(msg.sentAt).substring(0, 5)}
+                </Text>
+                <div className={classes.messageBubble}>
+                  <Text>{msg.text}</Text>
+                </div>
+              </>
+            ) : (
+              <>
+                <Avatar size="md" radius="xl" src={msg.user.image} />
+                <Stack spacing={6} sx={{ flex: 1 }}>
+                  <Group spacing="sm" align="baseline">
+                    <Text size="sm" weight="bold">
+                      {msg.user.name}
+                    </Text>
+                    <Text size="xs">{shortTime.format(msg.sentAt)}</Text>
+                  </Group>
+                  <div className={classes.messageBubble}>
+                    <Text>{msg.text}</Text>
+                  </div>
+                </Stack>
+              </>
+            )}
           </div>
         ))}
       </Stack>
@@ -111,6 +157,8 @@ const Chat = () => {
         onKeyDown={getHotkeyHandler([["Enter", sendMessage]])}
         size="md"
         placeholder="Send a message"
+        aria-label="Message input"
+        autocomplete="off"
         sx={{ position: "fixed", bottom: 16, width: "calc(100% - 112px)" }}
       />
     </>
