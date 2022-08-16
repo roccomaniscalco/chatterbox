@@ -82,7 +82,7 @@ const Message = forwardRef(({ msg, prevMsg }, ref) => {
         <>
           <Avatar size="md" radius="xl" src={msg.user.image} />
           <Stack spacing={6} sx={{ flex: 1 }}>
-            <Group spacing="sm" align="baseline">
+            <Group spacing="xs" align="baseline">
               <Text size="sm" weight="bold">
                 {msg.user.name}
               </Text>

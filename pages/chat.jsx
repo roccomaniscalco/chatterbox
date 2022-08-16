@@ -1,5 +1,5 @@
-import { Stack, Textarea, TextInput } from "@mantine/core";
-import { getHotkeyHandler, useScrollIntoView } from "@mantine/hooks";
+import { Stack } from "@mantine/core";
+import { useScrollIntoView } from "@mantine/hooks";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { flushSync } from "react-dom";
 import { io } from "socket.io-client";
 import ChatLayout from "../components/ChatLayout";
 import Message from "../components/Message";
+import MessageInput from "../components/MessageInput";
 import { authOptions } from "../config";
 
 let socket;
@@ -41,9 +42,10 @@ const Chat = () => {
   };
 
   const sendMessage = async () => {
-    if (input.length < 1) return;
+    const trimmedInput = input.trim()
+    if (trimmedInput.length < 1) return;
     socket.emit("message", {
-      text: input,
+      text: trimmedInput,
       user: session.user,
       sentAt: Date.now(),
     });
@@ -63,44 +65,10 @@ const Chat = () => {
         ))}
       </Stack>
 
-      <Textarea
-        value={input}
-        onChange={handleChange}
-        onKeyDown={getHotkeyHandler([["Enter", sendMessage]])}
-        size="md"
-        autosize
-        minRows={2}
-        placeholder="Send a message"
-        aria-label="Message input"
-        autoComplete="off"
-        styles={(theme) => ({
-          root: {
-            position: "fixed",
-            bottom: 16,
-            width: "calc(100% - 112px)",
-          },
-          input: {
-            backgroundColor:
-              theme.colorScheme === "dark" ? theme.colors.dark[9] : theme.white,
-            borderColor:
-              theme.colorScheme === "dark"
-                ? theme.colors.dark[7]
-                : theme.colors.gray[2],
-            "&:focus": {
-              backgroundColor:
-                theme.colorScheme === "dark" ? theme.black : theme.white,
-              borderColor:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[7]
-                  : theme.colors.gray[2],
-              boxShadow:
-                theme.colorScheme === "dark" ? "none" : theme.shadows.xl,
-            },
-            // stop scroll bar flashing when a new row is types
-            // must be used with autosize true and no maxRows
-            overflow: "hidden",
-          },
-        })}
+      <MessageInput
+        input={input}
+        handleChange={handleChange}
+        sendMessage={sendMessage}
       />
     </>
   );
