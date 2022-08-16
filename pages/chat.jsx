@@ -9,7 +9,6 @@ import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
 
 const Chat = () => {
-
   const { scrollIntoView: scrollToLastMessage, targetRef: lastMessageRef } =
     useScrollIntoView({ duration: 500 });
   const { data: session } = useSession();
@@ -25,7 +24,7 @@ const Chat = () => {
       flushSync(() => {
         setMessages((prevState) => [...prevState, data]);
       });
-      scrollToLastMessage();
+      scrollToLastMessage({ alignment: "start" });
     });
 
     return () => {

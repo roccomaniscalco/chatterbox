@@ -69,17 +69,18 @@ const Message = forwardRef(({ msg, prevMsg }, ref) => {
   const { classes, cx } = useStyles();
   const { data: session } = useSession();
 
-  const isUserMsg = (msg) => msg?.sender.email === session.user.email;
+  const isUserMsg = msg?.sender.email === session.user.email;
+  const isSameUser = msg?.sender.email === prevMsg?.sender.email;
 
   return (
     <div
       className={cx(
         classes.messageWrapper,
-        isUserMsg(msg) && classes.userMessageWrapper
+        isUserMsg && classes.userMessageWrapper
       )}
       ref={ref}
     >
-      {isUserMsg(prevMsg) ? (
+      {isSameUser ? (
         <>
           <Text size="xs" align="right" className={classes.startAt}>
             {shortTime.format(msg.sentAt).substring(0, 5)}
