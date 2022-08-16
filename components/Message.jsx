@@ -1,7 +1,7 @@
 import { Avatar, createStyles, Group, Stack, Text } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { number, shape, string } from "prop-types";
-import { forwardRef, memo } from "react";
+import { forwardRef } from "react";
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   messageWrapper: {
@@ -25,6 +25,14 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     },
     [`.${getRef("startAt")}`]: {
       textAlign: "left",
+    },
+    // contains user name and sentAt
+    ".firstUserMessageGroup": {
+      flexDirection: "row-reverse",
+    },
+    // contains firstUserMessageGroup and messageBubble
+    ".firstUserMessageStack": {
+      alignItems: "end",
     },
   },
 
@@ -83,13 +91,11 @@ const Message = forwardRef(({ msg, prevMsg }, ref) => {
       ) : (
         <>
           <Avatar size="md" radius="xl" src={msg.user.image} />
-          <Stack spacing={6}>
+          <Stack spacing={6} className="firstUserMessageStack">
             <Group
               spacing="xs"
               align="baseline"
-              sx={{
-                flexDirection: isUserMessage(msg) ? "row-reverse" : "start",
-              }}
+              className="firstUserMessageGroup"
             >
               <Text size="sm" weight="bold">
                 {msg.user.name}

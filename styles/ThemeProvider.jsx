@@ -22,19 +22,14 @@ const ThemeProvider = ({ children }) => {
         withNormalizeCSS
         withGlobalStyles
         theme={{
+          colorScheme,
+          primaryColor: "indigo",
+          colors: colors,
           black: "#010409",
           white: "#ffffff",
           shadows: {
             xl: "0px 5px 20px rgba(0, 0, 0, .6)",
           },
-          colorScheme,
-          colors: {
-            ...colors,
-          },
-          primaryShade: {
-            light: 4,
-            dark: 4,
-          }
         }}
       >
         <Global
