@@ -2,15 +2,13 @@ import { Stack } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
+import pusherJs from "pusher-js";
+import { useEffect, useState } from "react";
 import { flushSync } from "react-dom";
-import { io } from "socket.io-client";
 import ChatLayout from "../components/ChatLayout";
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
 import { authOptions } from "../config";
-
-let socket;
 
 const Chat = () => {
   const { scrollIntoView: scrollToLastMessage, targetRef: lastMessageRef } =
@@ -18,36 +16,37 @@ const Chat = () => {
   const { data: session } = useSession();
   const [messages, setMessages] = useState([]);
 
-  const socketInitializer = useCallback(async () => {
-    await fetch("/api/socket");
-    socket = io();
-
-    socket.on("connect", () => {
-      console.log("connected");
+  useEffect(() => {
+    const pusher = new pusherJs(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });
 
-    socket.on("message", (msg) => {
-      flushSync(() => setMessages((prevMsgs) => [...prevMsgs, msg]));
+    const channel = pusher.subscribe("chat");
+    channel.bind("chat-event", (data) => {
+      flushSync(() => {
+        setMessages((prevState) => [...prevState, data]);
+      });
       scrollToLastMessage();
     });
+
+    return () => {
+      pusher.unsubscribe("chat");
+    };
   }, [scrollToLastMessage]);
 
-  useEffect(() => {
-    socketInitializer();
-  }, [socketInitializer]);
-
-  const sendMessage = useCallback(
-    async (msg) => {
-      const trimmedInput = msg.trim();
-      if (trimmedInput.length < 1) return;
-      socket.emit("message", {
-        text: trimmedInput,
-        user: session.user,
+  const sendMessage = async (content) => {
+    await fetch("/api/pusher", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content,
+        sender: session.user,
         sentAt: Date.now(),
-      });
-    },
-    [session]
-  );
+      }),
+    });
+  };
 
   return (
     <>

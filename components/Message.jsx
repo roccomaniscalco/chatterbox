@@ -69,28 +69,28 @@ const Message = forwardRef(({ msg, prevMsg }, ref) => {
   const { classes, cx } = useStyles();
   const { data: session } = useSession();
 
-  const isUserMessage = (msg) => msg?.user.email === session.user.email;
+  const isUserMsg = (msg) => msg?.sender.email === session.user.email;
 
   return (
     <div
       className={cx(
         classes.messageWrapper,
-        isUserMessage(msg) && classes.userMessageWrapper
+        isUserMsg(msg) && classes.userMessageWrapper
       )}
       ref={ref}
     >
-      {isUserMessage(prevMsg) ? (
+      {isUserMsg(prevMsg) ? (
         <>
           <Text size="xs" align="right" className={classes.startAt}>
             {shortTime.format(msg.sentAt).substring(0, 5)}
           </Text>
           <div className={classes.messageBubble}>
-            <Text>{msg.text}</Text>
+            <Text>{msg.content}</Text>
           </div>
         </>
       ) : (
         <>
-          <Avatar size="md" radius="xl" src={msg.user.image} />
+          <Avatar size="md" radius="xl" src={msg.sender.image} />
           <Stack spacing={6} className="firstUserMessageStack">
             <Group
               spacing="xs"
@@ -98,12 +98,12 @@ const Message = forwardRef(({ msg, prevMsg }, ref) => {
               className="firstUserMessageGroup"
             >
               <Text size="sm" weight="bold">
-                {msg.user.name}
+                {msg.sender.name}
               </Text>
               <Text size="xs">{shortTime.format(msg.sentAt)}</Text>
             </Group>
             <div className={classes.messageBubble}>
-              <Text>{msg.text}</Text>
+              <Text>{msg.content}</Text>
             </div>
           </Stack>
         </>
@@ -113,12 +113,12 @@ const Message = forwardRef(({ msg, prevMsg }, ref) => {
 });
 
 const message = shape({
-  user: shape({
+  sender: shape({
     name: string.isRequired,
     email: string.isRequired,
     image: string.isRequired,
   }),
-  text: string.isRequired,
+  content: string.isRequired,
   sentAt: number.isRequired,
 });
 

@@ -65,7 +65,7 @@ const MessageInput = ({ sendMessage }) => {
     setValue(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     sendMessage(value);
     setValue("");
   };
