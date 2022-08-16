@@ -1,4 +1,5 @@
 import { AppShell, Header } from "@mantine/core";
+import { useSession } from "next-auth/react";
 import ChatNavbar from "./ChatNavbar";
 
 const HEADER_HEIGHT = 70;
@@ -27,13 +28,14 @@ const ChatHeader = () => {
 };
 
 const ChatLayout = ({ children }) => {
+  const { data: session } = useSession();
+
   return (
     <AppShell
       header={<ChatHeader />}
       navbar={<ChatNavbar width={NAVBAR_WIDTH} headerHeight={HEADER_HEIGHT} />}
     >
-      {/* <ChatHeader /> */}
-      {children}
+      {session && children}
     </AppShell>
   );
 };

@@ -1,6 +1,5 @@
 import { Stack } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
-import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import pusherJs from "pusher-js";
 import { useEffect, useState } from "react";
@@ -8,9 +7,9 @@ import { flushSync } from "react-dom";
 import ChatLayout from "../components/ChatLayout";
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
-import { authOptions } from "../config";
 
 const Chat = () => {
+
   const { scrollIntoView: scrollToLastMessage, targetRef: lastMessageRef } =
     useScrollIntoView({ duration: 500 });
   const { data: session } = useSession();
@@ -68,12 +67,6 @@ const Chat = () => {
 
 Chat.getLayout = (page) => {
   return <ChatLayout>{page}</ChatLayout>;
-};
-
-export const getServerSideProps = async ({ req, res }) => {
-  const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) return { redirect: { destination: "/", permanent: false } };
-  return { props: { session } };
 };
 
 export default Chat;

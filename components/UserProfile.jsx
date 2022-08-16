@@ -60,14 +60,14 @@ const UserProfile = () => {
               },
             })}
           >
-            <Avatar src={session.user.image} size="lg" radius="xl" />
+            <Avatar src={session?.user.image} size="lg" radius="xl" />
           </Indicator>
         </ActionIcon>
       </Popover.Target>
       <Popover.Dropdown>
-        <Text weight="bold">{session.user.name}</Text>
+        <Text weight="bold">{session?.user.name}</Text>
         <Text size="sm" color="dimmed">
-          {session.user.email}
+          {session?.user.email}
         </Text>
 
         <UnstyledButton
