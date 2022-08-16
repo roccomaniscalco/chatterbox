@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 const useStyles = createStyles((theme) => ({
   root: {
     position: "fixed",
+    right: 16,
     bottom: 16,
     width: "calc(100% - 112px)",
   },

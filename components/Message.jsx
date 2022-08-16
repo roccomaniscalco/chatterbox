@@ -9,6 +9,8 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     display: "flex",
     gap: theme.spacing.xs,
     paddingBottom: 4,
+    paddingLeft: 16,
+    paddingRight: 64,
     [`&:hover .${getRef("startAt")}`]: {
       opacity: 1,
     },
@@ -17,6 +19,8 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   userMessageWrapper: {
     flexDirection: "row-reverse",
     justifyContent: "end",
+    paddingLeft: 64,
+    paddingRight: 16,
     ["." + getRef("messageBubble")]: {
       backgroundColor: theme.fn.primaryColor(),
       color: theme.white,
@@ -91,8 +95,8 @@ const Message = forwardRef(({ msg, prevMsg }, ref) => {
         </>
       ) : (
         <>
-          <Avatar size="md" radius="xl" src={msg.sender.image} />
-          <Stack spacing={6} className="firstUserMessageStack">
+          <Avatar size="md" radius="xl" src={msg.sender.image} mt="xl"/>
+          <Stack spacing={6} className="firstUserMessageStack" mt="xl">
             <Group
               spacing="xs"
               align="baseline"

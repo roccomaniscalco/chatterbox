@@ -32,6 +32,7 @@ const ChatLayout = ({ children }) => {
 
   return (
     <AppShell
+      padding={0}
       header={<ChatHeader />}
       navbar={<ChatNavbar width={NAVBAR_WIDTH} headerHeight={HEADER_HEIGHT} />}
     >

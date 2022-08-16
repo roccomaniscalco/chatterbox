@@ -48,7 +48,7 @@ const Chat = () => {
 
   return (
     <>
-      <Stack spacing={0} pb={60}>
+      <Stack spacing={0} pb={87}>
         {messages.map((msg, i) => (
           <Message
             msg={msg}
