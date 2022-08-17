@@ -14,9 +14,11 @@ const Index = () => {
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn("github", { callbackUrl: "/chat"})}>Sign in</button>
+      <button onClick={() => signIn("github", { callbackUrl: "/chat" })}>
+        Sign in
+      </button>
     </>
   );
-}
+};
 
 export default Index;
