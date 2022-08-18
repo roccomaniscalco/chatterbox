@@ -34,4 +34,29 @@ model User {
   emailVerified DateTime?
   image         String?
   accounts      Account[]
+  messages      Message[]
+  channels      Channel[]
+}
+
+model Channel {
+  id          String    @id @default(cuid())
+  adminId     String
+  name        String    @unique
+  description String?
+  image       String?
+  createdAt   DateTime  @default(now())
+  messages    Message[]
+  users       User[]
+
+  @@index([name])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  channelId String
+  content   String
+  sentAt    DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
 }
