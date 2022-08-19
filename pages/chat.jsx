@@ -13,11 +13,15 @@ const Chat = () => {
     useScrollIntoView({ duration: 500 });
   const { data: session } = useSession();
   const [messages, setMessages] = useState([]);
-
+  
   useEffect(() => {
     const pusher = new pusherJs(process.env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+      userAuthentication: {
+        endpoint: "/api/pusher/auth",
+      },
     });
+    pusher.signin()
 
     const channel = pusher.subscribe("chat");
     channel.bind("chat-event", (data) => {
@@ -33,7 +37,7 @@ const Chat = () => {
   }, [scrollToLastMessage]);
 
   const sendMessage = async (content) => {
-    await fetch("/api/pusher", {
+    await fetch("/api/create-message", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
