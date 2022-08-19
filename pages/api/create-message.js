@@ -6,7 +6,7 @@ export default async function createMessageHandler(req, res) {
   const { content, sender, sentAt } = req.body;
   console.log("message received", { content, sender, sentAt });
 
-  await pusher.trigger("chat", "chat-event", {
+  await pusher.trigger("private-chat", "chat-event", {
     content,
     sender,
     sentAt,

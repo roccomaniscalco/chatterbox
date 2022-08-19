@@ -40,7 +40,6 @@ model User {
 
 model Channel {
   id          String    @id @default(cuid())
-  adminId     String
   name        String    @unique
   description String?
   image       String?
@@ -59,4 +58,13 @@ model Message {
   sentAt    DateTime
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+}
+
+model ChannelToUser {
+  A String
+  B String
+
+  @@unique([A, B], map: "_ChannelToUser_AB_unique")
+  @@index([B], map: "_ChannelToUser_B_index")
+  @@map("_ChannelToUser")
 }

@@ -17,13 +17,12 @@ const Chat = () => {
   useEffect(() => {
     const pusher = new pusherJs(process.env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-      userAuthentication: {
+      channelAuthorization: {
         endpoint: "/api/pusher/auth",
       },
     });
-    pusher.signin()
 
-    const channel = pusher.subscribe("chat");
+    const channel = pusher.subscribe("private-chat");
     channel.bind("chat-event", (data) => {
       flushSync(() => {
         setMessages((prevState) => [...prevState, data]);
@@ -32,7 +31,7 @@ const Chat = () => {
     });
 
     return () => {
-      pusher.unsubscribe("chat");
+      pusher.unsubscribe("private-chat");
     };
   }, [scrollToLastMessage]);
 
