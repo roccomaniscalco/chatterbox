@@ -42,7 +42,7 @@ model Channel {
   id          String    @id @default(cuid())
   name        String    @unique
   description String?
-  image       String?
+  image       String?   @db.Text
   createdAt   DateTime  @default(now())
   messages    Message[]
   users       User[]

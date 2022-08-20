@@ -3,6 +3,7 @@ import Link from "next/link";
 import { number } from "prop-types";
 import DarkModeToggle from "./DarkModeToggle";
 import IconChatterbox from "./IconChatterbox";
+import NewChannelModal from "./NewChannelModal";
 import UserProfile from "./UserProfile";
 
 const ChatNavbar = ({ width, headerHeight }) => {
@@ -50,7 +51,11 @@ const ChatNavbar = ({ width, headerHeight }) => {
         </Center>
       </Navbar.Section>
 
-      <Navbar.Section grow></Navbar.Section>
+      <Navbar.Section grow>
+        <Stack align="center" pt="xl">
+          <NewChannelModal />
+        </Stack>
+      </Navbar.Section>
 
       <Stack mb="md">
         <DarkModeToggle />
