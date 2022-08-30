@@ -1,164 +1,153 @@
 import {
   ActionIcon,
-  Avatar,
   Button,
-  Loader,
   Modal,
   Stack,
   Textarea,
   TextInput,
 } from "@mantine/core";
 import { IconPencil, IconPhoto, IconPlus, IconSignature } from "@tabler/icons";
+import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../lib/api";
 
-const MAX_STR_LENGTH = 191;
+const validateChannel = async ({ name, description }) => {
+  const error = {
+    name: "",
+    description: "",
+  };
+
+  if (!name) error.name = "Name is required";
+  else if (name.length > 191)
+    error.name = "Name must be less than 191 characters";
+  else {
+    try {
+      const channel = await api.getChannel(name);
+      if (channel) error.name = "Name already exists";
+    } catch (e) {
+      /* do nothing */
+    }
+  }
+
+  if (description.length > 191)
+    error.description = "Description must be less than 191 characters";
+  return error;
+};
 
 const NewChannelModal = () => {
   const { data: session } = useSession();
-
-  const [opened, setOpened] = useState(false);
-
-  const [name, setName] = useState("");
-  const [nameError, setNameError] = useState("");
-
-  const [description, setDescription] = useState("");
-  const [descriptionError, setDescriptionError] = useState("");
-
-  const [imgUrl, setImgUrl] = useState("");
-  const [imgUrlError, setImgUrlError] = useState("");
-  const [isValidImg, setIsValidImg] = useState(false);
-
-  const handleNameChange = (e) => {
-    if (e.target.value.length > MAX_STR_LENGTH) {
-      setNameError("Name exceeds max length");
-    } else {
-      setNameError("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [channel, setChannel] = useState({
+    name: "",
+    description: "",
+    image: "",
+    userId: "",
+  });
+  const [clientChannelError, setClientChannelError] = useState({
+    name: "",
+    description: "",
+  });
+  const mutation = useMutation(api.createChannel, {
+    onSuccess: () => {
+      setClientChannelError({
+        name: "",
+        description: "",
+      });
+      setChannel({
+        name: "",
+        description: "",
+        image: "",
+        userId: "",
+      });
     }
+  });
 
-    setName(e.target.value);
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
   };
 
-  const handleDescriptionChange = (e) => {
-    if (e.target.value.length > MAX_STR_LENGTH) {
-      setDescriptionError("Description exceeds max length");
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleChange = (e) => {
+    setChannel({ ...channel, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const err = await validateChannel(channel);
+    if (Object.values(err).some((e) => e !== "")) {
+      setClientChannelError(err);
     } else {
-      setDescriptionError("");
+      mutation.mutate({ ...channel, userId: session?.user.id });
     }
-
-    setDescription(e.target.value);
   };
 
-  const handleImgChange = (e) => {
-    const validateImgUrl = async (url) => {
-      const imgExists = async (url) => {
-        try {
-          const res = await fetch(url);
-          const buff = await res.blob();
-          return buff.type.startsWith("image/");
-        } catch (err) {
-          setIsValidImg(false);
-          setImgUrlError("Could not fetch url");
-        }
-      };
-
-      const isImg = await imgExists(url);
-      if (!isImg && url.length > 0) {
-        setImgUrlError("Url is not an image");
-        setIsValidImg(false);
-      } else if (isImg) {
-        setImgUrlError("");
-        setIsValidImg(true);
-      } else {
-        setImgUrlError("");
-        setIsValidImg(false);
-      }
-    };
-
-    setImgUrl(e.target.value);
-    validateImgUrl(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    fetch("/api/create-channel", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        description,
-        imgUrl,
-        userId: session.user.id,
-      }),
-    });
-  };
-
-  const handleOpen = () => {
-    setOpened(true);
-  };
+  useEffect(() => {
+    console.log(clientChannelError);
+  }, [clientChannelError]);
 
   return (
     <>
-      <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        title="New Chatterbox"
-      >
-        <Stack spacing="sm">
-          <TextInput
-            label="Name"
-            value={name}
-            error={nameError}
-            onChange={handleNameChange}
-            icon={<IconSignature />}
-            required
-            autoComplete="off"
-            data-autofocus
-          />
-          <TextInput
-            label="Image Url"
-            value={imgUrl}
-            error={imgUrlError}
-            onChange={handleImgChange}
-            icon={
-              isValidImg ? (
-                <Avatar size="sm" src={imgUrl}>
-                  <Loader />
-                </Avatar>
-              ) : (
-                <IconPhoto />
-              )
-            }
-            autoComplete="off"
-            type="url"
-          />
-          <Textarea
-            label="Description"
-            value={description}
-            error={descriptionError}
-            onChange={handleDescriptionChange}
-            icon={<IconPencil />}
-            styles={{ icon: { height: 36 } }}
-            autoComplete="off"
-          />
-          <Button
-            mt="sm"
-            leftIcon={<IconPlus size={16} />}
-            onClick={handleSubmit}
-          >
-            Create Chatterbox
-          </Button>
-        </Stack>
-      </Modal>
       <ActionIcon
         size="lg"
         variant="filled"
         color="primary"
-        onClick={handleOpen}
+        onClick={handleOpenModal}
       >
         <IconPlus size={24} />
       </ActionIcon>
+
+      <Modal
+        opened={isModalOpen}
+        onClose={handleCloseModal}
+        title="New Channel"
+      >
+        <form onSubmit={handleSubmit}>
+          <Stack spacing="xs">
+            <TextInput
+              name="name"
+              label="Name"
+              icon={<IconSignature />}
+              withAsterisk
+              autoComplete="off"
+              data-autofocus
+              value={channel.name}
+              onChange={handleChange}
+              error={clientChannelError.name}
+            />
+            <TextInput
+              name="image"
+              label="Image Url"
+              icon={<IconPhoto />}
+              autoComplete="off"
+              value={channel.image}
+              onChange={handleChange}
+            />
+            <Textarea
+              name="description"
+              label="Description"
+              icon={<IconPencil />}
+              styles={{ icon: { height: 36 } }}
+              autoComplete="off"
+              value={channel.description}
+              onChange={handleChange}
+              error={clientChannelError.description}
+            />
+            <Button
+              mt="xl"
+              leftIcon={<IconPlus size={16} />}
+              type="submit"
+              disabled={!session}
+            >
+              Create Channel
+            </Button>
+          </Stack>
+        </form>
+      </Modal>
     </>
   );
 };

@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getCookie } from "cookies-next";
 import { SessionProvider } from "next-auth/react";
 import App from "next/app";
@@ -10,17 +11,20 @@ const MyApp = ({
   pageProps: { session, ...pageProps },
 }) => {
   const getLayout = Component.getLayout || ((page) => page);
+  const queryClient = new QueryClient()
 
   return (
     <>
       <Head>
         <title>chatterbox</title>
       </Head>
-      <ThemeProvider initialColorScheme={colorScheme}>
-        <SessionProvider session={session}>
-          {getLayout(<Component {...pageProps} />)}
-        </SessionProvider>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider initialColorScheme={colorScheme}>
+          <SessionProvider session={session}>
+            {getLayout(<Component {...pageProps} />)}
+          </SessionProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </>
   );
 };
