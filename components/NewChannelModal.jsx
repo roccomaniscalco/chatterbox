@@ -86,10 +86,6 @@ const NewChannelModal = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(clientChannelError);
-  }, [clientChannelError]);
-
   return (
     <>
       <ActionIcon
