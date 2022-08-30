@@ -1,6 +1,4 @@
 import NextAuth from "next-auth";
-import { getAuthOptions } from "../../../lib/auth";
-
-const authOptions = getAuthOptions();
+import { authOptions } from "../../../lib/auth";
 
 export default NextAuth(authOptions);

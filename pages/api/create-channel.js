@@ -1,6 +1,6 @@
-import { getPrisma } from "../../lib/prisma";
+import { PrismaClient } from "@prisma/client";
 
-const prisma = getPrisma();
+const prisma = new PrismaClient();
 
 const createChannel = async (req, res) => {
   const { name, description, image, userId } = req.body;

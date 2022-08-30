@@ -1,3 +1,4 @@
+import { authOptions } from "../../lib/auth";
 import { getPusher } from "../../lib/pusher";
 
 pusher = getPusher();
