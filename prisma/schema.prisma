@@ -36,16 +36,19 @@ model User {
   accounts      Account[]
   messages      Message[]
   channels      Channel[]
+  adminChannels Channel[] @relation(name: "adminToChannels")
 }
 
 model Channel {
   id          String    @id @default(cuid())
+  adminId     String
   name        String    @unique
   description String?
   image       String?   @db.Text
   createdAt   DateTime  @default(now())
   messages    Message[]
   users       User[]
+  admin       User      @relation(name: "adminToChannels", fields: [adminId], references: [id])
 
   @@index([name])
 }

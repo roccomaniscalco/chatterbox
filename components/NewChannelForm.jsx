@@ -38,15 +38,13 @@ const NewChannelModal = () => {
     },
   });
 
-  const handleChange = (event) => {
-    setChannel({ ...channel, [event.target.name]: event.target.value });
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      // validate that channel name is unique
       await getChannelMutation.mutateAsync(channel.name);
     } catch (error) {
+      // if caught, channel.name is unique
       await createChannelMutation.mutateAsync({
         ...channel,
         userId: session?.user.id,
@@ -54,12 +52,17 @@ const NewChannelModal = () => {
     }
   };
 
+  const handleChange = (event) => {
+    setChannel({ ...channel, [event.target.name]: event.target.value });
+  };
+
   return (
     <form onSubmit={handleSubmit}>
-      <Stack spacing="xs">
+      <Stack spacing="sm">  
         <TextInput
           name="name"
           label="Name"
+          description="Channel names are unique and cannot be changed."
           icon={<IconSignature />}
           withAsterisk
           autoComplete="off"
@@ -87,7 +90,7 @@ const NewChannelModal = () => {
           onChange={handleChange}
         />
         <Button
-          mt="xl"
+          mt="sm"
           leftIcon={<IconPlus size={16} />}
           type="submit"
           disabled={!session}

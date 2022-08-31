@@ -14,6 +14,9 @@ const createChannel = async (req, res) => {
         users: {
           connect: [{ id: userId }],
         },
+        admin: {
+          connect: { id: userId },
+        }
       },
       include: {
         users: true,
