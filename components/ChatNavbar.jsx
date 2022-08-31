@@ -1,9 +1,11 @@
 import { ActionIcon, Anchor, Center, Navbar, Stack } from "@mantine/core";
+import { IconPlus } from "@tabler/icons";
 import Link from "next/link";
 import { number } from "prop-types";
+import AppModal from "./AppModal";
 import DarkModeToggle from "./DarkModeToggle";
 import IconChatterbox from "./IconChatterbox";
-import NewChannelModal from "./NewChannelModal";
+import NewChannelModal from "./NewChannelForm";
 import UserProfile from "./UserProfile";
 
 const ChatNavbar = ({ width, headerHeight }) => {
@@ -53,7 +55,9 @@ const ChatNavbar = ({ width, headerHeight }) => {
 
       <Navbar.Section grow>
         <Stack align="center" pt="xl">
-          <NewChannelModal />
+          <AppModal title="New Channel" Icon={IconPlus}>
+            <NewChannelModal />
+          </AppModal>
         </Stack>
       </Navbar.Section>
 
