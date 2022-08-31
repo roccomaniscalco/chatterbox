@@ -62,12 +62,3 @@ model Message {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
 }
-
-model ChannelToUser {
-  A String
-  B String
-
-  @@unique([A, B], map: "_ChannelToUser_AB_unique")
-  @@index([B], map: "_ChannelToUser_B_index")
-  @@map("_ChannelToUser")
-}
