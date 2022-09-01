@@ -3,9 +3,8 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const createChannel = async (req, res) => {
-  const { name, description, image, userId } = req.body;
-
   try {
+    const { name, description, image, userId } = req.body;
     const channel = await prisma.channel.create({
       data: {
         name,
@@ -16,10 +15,7 @@ const createChannel = async (req, res) => {
         },
         admin: {
           connect: { id: userId },
-        }
-      },
-      include: {
-        users: true,
+        },
       },
     });
     res.json(channel);

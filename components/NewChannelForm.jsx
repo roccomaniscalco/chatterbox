@@ -1,4 +1,4 @@
-import { Button, Stack, Textarea, TextInput } from "@mantine/core";
+import { Avatar, Button, Stack, Textarea, TextInput } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconPencil, IconPhoto, IconPlus, IconSignature } from "@tabler/icons";
 import { useMutation } from "@tanstack/react-query";
@@ -16,20 +16,22 @@ const INITIAL_CHANNEL = {
 const NewChannelModal = () => {
   const { data: session } = useSession();
   const [channel, setChannel] = useState(INITIAL_CHANNEL);
-  const [clientChannelError, setClientChannelError] = useState(INITIAL_CHANNEL);
+  const [channelError, setChannelError] = useState(INITIAL_CHANNEL);
 
-  const getChannelMutation = useMutation(api.getChannel, {
-    onSuccess: () => {
-      setClientChannelError((prevError) => ({
-        ...prevError,
-        name: "Name already exists",
-      }));
+  const channelExistsMutation = useMutation(api.doesChannelExist, {
+    onSuccess: (doesExist) => {
+      if (doesExist) {
+        setChannelError((prevError) => ({
+          ...prevError,
+          name: "Name already exists",
+        }));
+      }
     },
   });
   const createChannelMutation = useMutation(api.createChannel, {
     onSuccess: () => {
       setChannel(INITIAL_CHANNEL);
-      setClientChannelError(INITIAL_CHANNEL);
+      setChannelError(INITIAL_CHANNEL);
       showNotification({
         title: "Channel Created",
         message: `Start chatting in ${channel.name}`,
@@ -40,15 +42,26 @@ const NewChannelModal = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // require name to submit
+    if (!channel.name) {
+      setChannelError((prevError) => ({
+        ...prevError,
+        name: "Name is required",
+      }));
+      return;
+    }
+
     try {
-      // validate that channel name is unique
-      await getChannelMutation.mutateAsync(channel.name);
+      const doesExist = await channelExistsMutation.mutateAsync(channel.name);
+      if (!doesExist) {
+        await createChannelMutation.mutateAsync({
+          ...channel,
+          userId: session?.user.id,
+        });
+      }
     } catch (error) {
-      // if caught, channel.name is unique
-      await createChannelMutation.mutateAsync({
-        ...channel,
-        userId: session?.user.id,
-      });
+      console.error(error);
     }
   };
 
@@ -58,7 +71,7 @@ const NewChannelModal = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack spacing="sm">  
+      <Stack spacing="sm">
         <TextInput
           name="name"
           label="Name"
@@ -68,8 +81,9 @@ const NewChannelModal = () => {
           autoComplete="off"
           data-autofocus
           value={channel.name}
-          error={clientChannelError.name}
+          error={channelError.name}
           onChange={handleChange}
+          maxLength={191}
         />
         <TextInput
           name="image"
@@ -86,8 +100,9 @@ const NewChannelModal = () => {
           styles={{ icon: { height: 36 } }}
           autoComplete="off"
           value={channel.description}
-          error={clientChannelError.description}
+          error={channelError.description}
           onChange={handleChange}
+          maxLength={191}
         />
         <Button
           mt="sm"
@@ -95,7 +110,7 @@ const NewChannelModal = () => {
           type="submit"
           disabled={!session}
           loading={
-            getChannelMutation.isLoading || createChannelMutation.isLoading
+            channelExistsMutation.isLoading || createChannelMutation.isLoading
           }
         >
           Create Channel
