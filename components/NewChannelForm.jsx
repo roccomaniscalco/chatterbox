@@ -1,9 +1,16 @@
-import { Avatar, Button, Stack, Textarea, TextInput } from "@mantine/core";
+import {
+  Avatar,
+  Button,
+  Loader,
+  Stack,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconPencil, IconPhoto, IconPlus, IconSignature } from "@tabler/icons";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import api from "../lib/api";
 
 const INITIAL_CHANNEL = {
@@ -17,6 +24,30 @@ const NewChannelModal = () => {
   const { data: session } = useSession();
   const [channel, setChannel] = useState(INITIAL_CHANNEL);
   const [channelError, setChannelError] = useState(INITIAL_CHANNEL);
+  const [isValidImage, setIsValidImage] = useState(false);
+  const previewImage = useMemo(() => new Image(), []);
+
+  // validate image
+  useEffect(() => {
+    previewImage.src = channel.image;
+
+    previewImage.onload = () => {
+      setIsValidImage(true);
+      setChannelError((prevError) => ({ ...prevError, image: "" }));
+    };
+
+    previewImage.onerror = () => {
+      setIsValidImage(false);
+      if (channel.image === "") {
+        setChannelError((prevError) => ({ ...prevError, image: "" }));
+        return;
+      }
+      setChannelError((prevError) => ({
+        ...prevError,
+        image: "Failed to load image",
+      }));
+    };
+  }, [channel.image, previewImage]);
 
   const channelExistsMutation = useMutation(api.doesChannelExist, {
     onSuccess: (doesExist) => {
@@ -43,7 +74,7 @@ const NewChannelModal = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // require name to submit
+    // ensure channel name exists
     if (!channel.name) {
       setChannelError((prevError) => ({
         ...prevError,
@@ -53,6 +84,7 @@ const NewChannelModal = () => {
     }
 
     try {
+      // ensure channel name is unique
       const doesExist = await channelExistsMutation.mutateAsync(channel.name);
       if (!doesExist) {
         await createChannelMutation.mutateAsync({
@@ -61,6 +93,7 @@ const NewChannelModal = () => {
         });
       }
     } catch (error) {
+      // dangerously log error to console
       console.error(error);
     }
   };
@@ -88,9 +121,18 @@ const NewChannelModal = () => {
         <TextInput
           name="image"
           label="Image Url"
-          icon={<IconPhoto />}
+          icon={
+            isValidImage ? (
+              <Avatar src={channel.image} size="sm">
+                <Loader />
+              </Avatar>
+            ) : (
+              <IconPhoto />
+            )
+          }
           autoComplete="off"
           value={channel.image}
+          error={channelError.image}
           onChange={handleChange}
         />
         <Textarea
