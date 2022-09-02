@@ -17,6 +17,7 @@ const AppModal = ({ children, Icon, title, openInitially }) => {
       <Modal
         opened={isOpened}
         onClose={handleClose}
+        padding="xl"
         title={
           <Text color="dimmed" size="xs" transform="uppercase" weight="bold">
             {title}
