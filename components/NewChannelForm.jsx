@@ -104,7 +104,7 @@ const NewChannelModal = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack spacing="sm">
+      <Stack spacing="md">
         <TextInput
           name="name"
           label="Name"
@@ -147,7 +147,7 @@ const NewChannelModal = () => {
           maxLength={191}
         />
         <Button
-          mt="sm"
+          mt="md"
           leftIcon={<IconPlus size={16} />}
           type="submit"
           disabled={!session}
