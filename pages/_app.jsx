@@ -19,15 +19,15 @@ const MyApp = ({
       <Head>
         <title>chatterbox</title>
       </Head>
-      <SessionProvider session={session}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider initialColorScheme={colorScheme}>
-            <NotificationsProvider>
+      <ThemeProvider initialColorScheme={colorScheme}>
+        <NotificationsProvider>
+          <QueryClientProvider client={queryClient}>
+            <SessionProvider session={session}>
               {getLayout(<Component {...pageProps} />)}
-            </NotificationsProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </SessionProvider>
+            </SessionProvider>
+          </QueryClientProvider>
+        </NotificationsProvider>
+      </ThemeProvider>
     </>
   );
 };
