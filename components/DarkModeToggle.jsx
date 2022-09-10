@@ -1,61 +1,49 @@
 import {
-  createStyles,
-  Group,
-  Switch,
   useMantineColorScheme,
+  SegmentedControl,
+  Group,
+  Center,
+  Box,
 } from "@mantine/core";
-import { IconMoonStars, IconSun } from "@tabler/icons";
-
-const useStyles = createStyles((theme) => ({
-  root: {
-    position: "relative",
-    "& *": {
-      cursor: "pointer",
-    },
-  },
-  input: {
-    border: "none",
-  },
-  icon: {
-    pointerEvents: "none",
-    position: "absolute",
-    zIndex: 1,
-    top: 3,
-  },
-  iconLight: {
-    left: 4,
-    color: theme.white,
-  },
-  iconDark: {
-    right: 4,
-    color: theme.colors.gray[6],
-  },
-}));
+import { IconSun, IconMoon } from "@tabler/icons";
 
 const DarkModeToggle = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const { classes, cx } = useStyles();
 
   return (
-    <Group position="center">
-      <div className={classes.root}>
-        <IconSun
-          className={cx(classes.icon, classes.iconLight)}
-          size={18}
-          stroke={1.5}
-        />
-        <IconMoonStars
-          className={cx(classes.icon, classes.iconDark)}
-          size={18}
-          stroke={1.5}
-        />
-        <Switch
-          classNames={{ input: classes.input }}
-          checked={colorScheme === "light"}
-          onChange={() => toggleColorScheme()}
-          size="md"
-        />
-      </div>
+    <Group position="center" grow>
+      <SegmentedControl
+        styles={(theme) => ({
+          root: {
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[7]
+                : theme.colors.gray[2],
+          },
+        })}
+        value={colorScheme}
+        onChange={(value) => toggleColorScheme(value)}
+        data={[
+          {
+            value: "light",
+            label: (
+              <Center>
+                <IconSun size={16} stroke={1.5} />
+                <Box ml={10}>Light</Box>
+              </Center>
+            ),
+          },
+          {
+            value: "dark",
+            label: (
+              <Center>
+                <IconMoon size={16} stroke={1.5} />
+                <Box ml={10}>Dark</Box>
+              </Center>
+            ),
+          },
+        ]}
+      />
     </Group>
   );
 };

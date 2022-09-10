@@ -1,6 +1,6 @@
 import { AppShell, Footer, Header } from "@mantine/core";
 import { useSession } from "next-auth/react";
-import ChatNavbar from "./ChatNavbar";
+import ChatNavbar from "../ChatNavbar/ChatNavbar";
 import MessageInput from "./MessageInput";
 
 const HEADER_HEIGHT = 70;
@@ -28,18 +28,6 @@ const ChatLayout = ({ children }) => {
       })}
     ></Header>
   );
-
-  const channels = [
-    {
-      id: 0,
-      adminId: 123,
-      name: "The homies",
-      description: "A safe place for homies to kiss each other goodnight",
-      image: "https://c.tenor.com/JEnYk1aBg2EAAAAC/gay-kiss.gif",
-      createdAt: 1662598392693,
-      users: [],
-    },
-  ];
 
   const chatFooter = (
     <Footer

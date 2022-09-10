@@ -9,7 +9,10 @@ import {
 import { IconMessage, IconSettings, IconUsers } from "@tabler/icons";
 import { number } from "prop-types";
 import { useState } from "react";
-import UserProfile from "./UserProfile";
+import UserProfile from "../components/UserProfile";
+import FriendsTab from "./FriendsTab";
+import MessagesTab from "./MessagesTab";
+import SettingsTab from "./SettingsTab";
 
 const useStyles = createStyles((theme, { headerHeight }) => ({
   root: {
@@ -84,14 +87,14 @@ const useStyles = createStyles((theme, { headerHeight }) => ({
 }));
 
 const mainLinksData = [
-  { icon: IconMessage, label: "Messages" },
-  { icon: IconUsers, label: "Friends" },
-  { icon: IconSettings, label: "Settings" },
+  { Icon: IconMessage, label: "Messages", Component: MessagesTab },
+  { Icon: IconUsers, label: "Friends",  Component: FriendsTab },
+  { Icon: IconSettings, label: "Settings", Component: SettingsTab },
 ];
 
 const ChatNavbar = ({ navbarWidth, headerHeight }) => {
   const { classes, cx } = useStyles({ headerHeight });
-  const [active, setActive] = useState("Messages");
+  const [active, setActive] = useState(mainLinksData[0]);
 
   const mainLinks = mainLinksData.map((link) => (
     <Tooltip
@@ -102,12 +105,12 @@ const ChatNavbar = ({ navbarWidth, headerHeight }) => {
       key={link.label}
     >
       <UnstyledButton
-        onClick={() => setActive(link.label)}
+        onClick={() => setActive(link)}
         className={cx(classes.mainLink, {
-          [classes.mainLinkActive]: link.label === active,
+          [classes.mainLinkActive]: link.label === active.label,
         })}
       >
-        <link.icon stroke={1.5} />
+        <link.Icon stroke={1.5} />
       </UnstyledButton>
     </Tooltip>
   ));
@@ -124,9 +127,7 @@ const ChatNavbar = ({ navbarWidth, headerHeight }) => {
         </div>
         <div className={classes.main}>
           <div className={classes.header}></div>
-          <Title order={4} p="md">
-            {active}
-          </Title>
+          <active.Component/>
         </div>
       </Navbar.Section>
     </Navbar>
