@@ -1,6 +1,6 @@
 import { AppShell, Footer, Header } from "@mantine/core";
 import { useSession } from "next-auth/react";
-import ChatNavbar from "./ChatNavbor";
+import ChatNavbar from "./ChatNavbar";
 import MessageInput from "./MessageInput";
 
 const HEADER_HEIGHT = 70;
