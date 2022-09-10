@@ -22,7 +22,7 @@ const UserProfile = () => {
       position="right-start"
       offset={10}
       withArrow
-      arrowOffset={20}
+      arrowOffset={14}
       arrowSize={16}
       styles={(theme) => ({
         dropdown: {
@@ -44,9 +44,9 @@ const UserProfile = () => {
       })}
     >
       <Popover.Target>
-        <ActionIcon size={64} radius="xl">
+        <ActionIcon size="xl" radius="xl">
           <Indicator
-            offset={8}
+            offset={4}
             size={16}
             color="green"
             styles={(theme) => ({
@@ -60,7 +60,7 @@ const UserProfile = () => {
               },
             })}
           >
-            <Avatar src={session?.user.image} size="lg" radius="xl" />
+            <Avatar src={session?.user.image} size="md" radius="xl" />
           </Indicator>
         </ActionIcon>
       </Popover.Target>

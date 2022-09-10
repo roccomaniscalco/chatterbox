@@ -6,14 +6,12 @@ import { useEffect, useState } from "react";
 import { flushSync } from "react-dom";
 import ChatLayout from "../components/ChatLayout";
 import Message from "../components/Message";
-import MessageInput from "../components/MessageInput";
 
 const Chat = () => {
   const { scrollIntoView: scrollToLastMessage, targetRef: lastMessageRef } =
     useScrollIntoView({ duration: 500 });
-  const { data: session } = useSession();
   const [messages, setMessages] = useState([]);
-  
+
   useEffect(() => {
     const pusher = new pusherJs(process.env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
@@ -35,35 +33,17 @@ const Chat = () => {
     };
   }, [scrollToLastMessage]);
 
-  const sendMessage = async (content) => {
-    await fetch("/api/create-message", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        content,
-        sender: session.user,
-        sentAt: Date.now(),
-      }),
-    });
-  };
-
   return (
-    <>
-      <Stack spacing={0} pb={87}>
-        {messages.map((msg, i) => (
-          <Message
-            msg={msg}
-            prevMsg={messages[i - 1]}
-            ref={i === messages.length - 1 ? lastMessageRef : null}
-            key={i}
-          />
-        ))}
-      </Stack>
-
-      <MessageInput sendMessage={sendMessage} />
-    </>
+    <Stack spacing={0}>
+      {messages.map((msg, i) => (
+        <Message
+          msg={msg}
+          prevMsg={messages[i - 1]}
+          ref={i === messages.length - 1 ? lastMessageRef : null}
+          key={i}
+        />
+      ))}
+    </Stack>
   );
 };
 

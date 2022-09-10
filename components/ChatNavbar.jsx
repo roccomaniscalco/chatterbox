@@ -1,83 +1,140 @@
-import { ActionIcon, Anchor, Center, Navbar, Stack } from "@mantine/core";
-import { IconPlus } from "@tabler/icons";
-import Link from "next/link";
+import {
+  Box,
+  createStyles,
+  Navbar,
+  Title,
+  Tooltip,
+  UnstyledButton,
+} from "@mantine/core";
+import { IconMessage, IconSettings, IconUsers } from "@tabler/icons";
 import { number } from "prop-types";
-import AppModal from "./AppModal";
-import DarkModeToggle from "./DarkModeToggle";
-import IconChatterbox from "./IconChatterbox";
-import NewChannelModal from "./NewChannelForm";
+import { useState } from "react";
 import UserProfile from "./UserProfile";
 
-const ChatNavbar = ({ width, headerHeight }) => {
-  return (
-    <Navbar
-      width={{ base: width }}
-      sx={(theme) => ({
-        top: 0,
-        height: "100vh",
-        backgroundColor:
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[8]
-            : theme.colors.gray[1],
-        borderColor:
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[7]
-            : theme.colors.gray[2],
-      })}
+const useStyles = createStyles((theme, { headerHeight }) => ({
+  root: {
+    height: "100vh",
+    border: "none",
+    position: "absolute",
+    top: 0,
+  },
+
+  wrapper: {
+    display: "flex",
+  },
+
+  aside: {
+    display: "flex",
+    flex: "0 0 70px",
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[9] : theme.white,
+  },
+
+  main: {
+    flex: 1,
+    backgroundColor:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[8]
+        : theme.colors.gray[0],
+
+    borderInline: `1px solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[2]
+    }`,
+  },
+
+  mainLink: {
+    width: 44,
+    height: 44,
+    borderRadius: theme.radius.md,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[0]
+        : theme.colors.gray[7],
+
+    "&:hover": {
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[8]
+          : theme.colors.gray[0],
+    },
+  },
+
+  mainLinkActive: {
+    "&, &:hover": {
+      backgroundColor: theme.fn.variant({
+        variant: "light",
+        color: theme.primaryColor,
+      }).background,
+      color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
+        .color,
+    },
+  },
+
+  header: {
+    height: headerHeight,
+    borderBottom: `1px solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[2]
+    }`,
+  },
+}));
+
+const mainLinksData = [
+  { icon: IconMessage, label: "Messages" },
+  { icon: IconUsers, label: "Friends" },
+  { icon: IconSettings, label: "Settings" },
+];
+
+const ChatNavbar = ({ navbarWidth, headerHeight }) => {
+  const { classes, cx } = useStyles({ headerHeight });
+  const [active, setActive] = useState("Messages");
+
+  const mainLinks = mainLinksData.map((link) => (
+    <Tooltip
+      label={link.label}
+      position="right"
+      withArrow
+      transitionDuration={0}
+      key={link.label}
     >
-      <Center sx={{ height: headerHeight }}>
-        <Link href="/">
-          <ActionIcon
-            variant="transparent"
-            size="xl"
-            sx={(theme) => ({
-              color:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[4]
-                  : theme.colors.gray[6],
-              transition: "transform 0.2s",
-              "&:hover": {
-                color: theme.colors.indigo[5],
-                transform: "scale(1.1)",
-              },
-            })}
-          >
-            <IconChatterbox size={64} />
-          </ActionIcon>
-        </Link>
-      </Center>
+      <UnstyledButton
+        onClick={() => setActive(link.label)}
+        className={cx(classes.mainLink, {
+          [classes.mainLinkActive]: link.label === active,
+        })}
+      >
+        <link.icon stroke={1.5} />
+      </UnstyledButton>
+    </Tooltip>
+  ));
 
-      <Navbar.Section>
-        <Center>
-          <UserProfile />
-        </Center>
+  return (
+    <Navbar width={{ base: navbarWidth }} className={classes.root}>
+      <Navbar.Section grow className={classes.wrapper}>
+        <div className={classes.aside}>
+          <div className={classes.header}></div>
+          <Box pt="xs" pb="xl">
+            <UserProfile />
+          </Box>
+          {mainLinks}
+        </div>
+        <div className={classes.main}>
+          <div className={classes.header}></div>
+          <Title order={4} p="md">
+            {active}
+          </Title>
+        </div>
       </Navbar.Section>
-
-      <Navbar.Section grow>
-        <Stack align="center" pt="xl">
-          <AppModal title="New Channel" Icon={IconPlus}>
-            <NewChannelModal />
-          </AppModal>
-        </Stack>
-      </Navbar.Section>
-
-      <Stack mb="md">
-        <DarkModeToggle />
-        <Anchor
-          size="xs"
-          color="dimmed"
-          align="center"
-          href="https://github.com/roccomaniscalco/chatterbox"
-        >
-          v0.0.1
-        </Anchor>
-      </Stack>
     </Navbar>
   );
 };
 
 ChatNavbar.propTypes = {
-  width: number,
+  navbarWidth: number,
   headerHeight: number,
 };
 

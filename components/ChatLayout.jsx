@@ -1,14 +1,17 @@
-import { AppShell, Header } from "@mantine/core";
+import { AppShell, Footer, Header } from "@mantine/core";
 import { useSession } from "next-auth/react";
-import ChatNavbar from "./ChatNavbar";
+import ChatNavbar from "./ChatNavBar";
+import MessageInput from "./MessageInput";
 
 const HEADER_HEIGHT = 70;
-const NAVBAR_WIDTH = 80;
+const NAVBAR_WIDTH = 320;
+const FOOTER_HEIGHT = 63;
 
-const ChatHeader = () => {
-  return (
+const ChatLayout = ({ children }) => {
+  const { data: session } = useSession();
+
+  const chatHeader = (
     <Header
-      zIndex={-1}
       height={HEADER_HEIGHT}
       fixed
       position={{ left: NAVBAR_WIDTH, right: 0 }}
@@ -25,16 +28,43 @@ const ChatHeader = () => {
       })}
     ></Header>
   );
-};
 
-const ChatLayout = ({ children }) => {
-  const { data: session } = useSession();
+  const channels = [
+    {
+      id: 0,
+      adminId: 123,
+      name: "The homies",
+      description: "A safe place for homies to kiss each other goodnight",
+      image: "https://c.tenor.com/JEnYk1aBg2EAAAAC/gay-kiss.gif",
+      createdAt: 1662598392693,
+      users: [],
+    },
+  ];
+
+  const chatFooter = (
+    <Footer
+      height={FOOTER_HEIGHT}
+      px="md"
+      sx={(theme) => ({
+        borderTop: "none",
+        backgroundColor:
+          theme.colorScheme === "dark" ? theme.colors.dark[9] : theme.white,
+        left: NAVBAR_WIDTH,
+      })}
+    >
+      <MessageInput />
+    </Footer>
+  );
 
   return (
     <AppShell
+      fixed
       padding={0}
-      header={<ChatHeader />}
-      navbar={<ChatNavbar width={NAVBAR_WIDTH} headerHeight={HEADER_HEIGHT} />}
+      header={chatHeader}
+      navbar={
+        <ChatNavbar navbarWidth={NAVBAR_WIDTH} headerHeight={HEADER_HEIGHT} />
+      }
+      footer={chatFooter}
     >
       {session && children}
     </AppShell>

@@ -1,15 +1,13 @@
 import { ActionIcon, createStyles, Textarea, Tooltip } from "@mantine/core";
 import { getHotkeyHandler, useWindowEvent } from "@mantine/hooks";
 import { IconSend } from "@tabler/icons";
+import { useSession } from "next-auth/react";
 import { func } from "prop-types";
 import { useRef, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   root: {
-    position: "fixed",
-    right: 16,
-    bottom: 16,
-    width: "calc(100% - 112px)",
+    width: "100%",
   },
   input: {
     backgroundColor:
@@ -53,7 +51,8 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const MessageInput = ({ sendMessage }) => {
+const MessageInput = () => {
+  const { data: session } = useSession();
   const { classes } = useStyles();
   const [value, setValue] = useState("");
   const textAreaRef = useRef();
@@ -61,6 +60,21 @@ const MessageInput = ({ sendMessage }) => {
     if (e.key === "Enter") return;
     textAreaRef.current.focus();
   });
+
+  // TODO: replace with mutation
+  const sendMessage = async (content) => {
+    await fetch("/api/create-message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content,
+        sender: session.user,
+        sentAt: Date.now(),
+      }),
+    });
+  };
 
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -98,10 +112,6 @@ const MessageInput = ({ sendMessage }) => {
       ref={textAreaRef}
     />
   );
-};
-
-MessageInput.propTypes = {
-  sendMessage: func.isRequired,
 };
 
 export default MessageInput;
