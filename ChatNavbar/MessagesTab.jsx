@@ -14,11 +14,11 @@ const channels = [
   },
 ];
 
-const MessagesTab = () => {
+const ChatTab = () => {
   return (
     <>
       <TabHeader
-        title="Messages"
+        title="Chat"
         actionItem={
           <Tooltip label="Create Channel" withArrow position="right" openDelay={1000}>
             <ActionIcon
@@ -34,4 +34,4 @@ const MessagesTab = () => {
   );
 };
 
-export default MessagesTab;
+export default ChatTab;

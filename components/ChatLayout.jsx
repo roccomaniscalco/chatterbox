@@ -3,7 +3,9 @@ import { useSession } from "next-auth/react";
 import ChatNavbar from "../ChatNavbar/ChatNavbar";
 import MessageInput from "./MessageInput";
 
+// sizes in pixels (px)
 const HEADER_HEIGHT = 70;
+const NAVBAR_ASIDE_WIDTH = 60;
 const NAVBAR_WIDTH = 320;
 const FOOTER_HEIGHT = 63;
 
@@ -50,7 +52,11 @@ const ChatLayout = ({ children }) => {
       padding={0}
       header={chatHeader}
       navbar={
-        <ChatNavbar navbarWidth={NAVBAR_WIDTH} headerHeight={HEADER_HEIGHT} />
+        <ChatNavbar
+          navbarWidth={NAVBAR_WIDTH}
+          navbarAsideWidth={NAVBAR_ASIDE_WIDTH}
+          headerHeight={HEADER_HEIGHT}
+        />
       }
       footer={chatFooter}
     >

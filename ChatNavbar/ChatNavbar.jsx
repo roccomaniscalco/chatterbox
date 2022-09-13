@@ -8,12 +8,12 @@ import {
 import { IconMessage, IconSettings, IconUsers } from "@tabler/icons";
 import { number } from "prop-types";
 import { useState } from "react";
-import UserProfile from "../components/UserProfile";
+import UserProfile from "./UserProfile";
 import FriendsTab from "./FriendsTab";
-import MessagesTab from "./MessagesTab";
+import ChatTab from "./MessagesTab";
 import SettingsTab from "./SettingsTab";
 
-const useStyles = createStyles((theme, { headerHeight }) => ({
+const useStyles = createStyles((theme, { headerHeight, navbarAsideWidth }) => ({
   root: {
     height: "100vh",
     border: "none",
@@ -27,7 +27,7 @@ const useStyles = createStyles((theme, { headerHeight }) => ({
 
   aside: {
     display: "flex",
-    flex: "0 0 70px",
+    flex: `0 0 ${navbarAsideWidth}px`,
     flexDirection: "column",
     alignItems: "center",
     backgroundColor:
@@ -48,7 +48,7 @@ const useStyles = createStyles((theme, { headerHeight }) => ({
     }`,
   },
 
-  mainLink: {
+  iconLink: {
     width: 44,
     height: 44,
     borderRadius: theme.radius.md,
@@ -68,7 +68,7 @@ const useStyles = createStyles((theme, { headerHeight }) => ({
     },
   },
 
-  mainLinkActive: {
+  iconLinkActive: {
     "&, &:hover": {
       backgroundColor: theme.fn.variant({
         variant: "filled",
@@ -87,13 +87,13 @@ const useStyles = createStyles((theme, { headerHeight }) => ({
 }));
 
 const mainLinksData = [
-  { Icon: IconMessage, label: "Messages", Component: MessagesTab },
+  { Icon: IconMessage, label: "Chat", Component: ChatTab },
   { Icon: IconUsers, label: "Friends", Component: FriendsTab },
   { Icon: IconSettings, label: "Settings", Component: SettingsTab },
 ];
 
-const ChatNavbar = ({ navbarWidth, headerHeight }) => {
-  const { classes, cx } = useStyles({ headerHeight });
+const ChatNavbar = ({ navbarWidth, navbarAsideWidth, headerHeight }) => {
+  const { classes, cx } = useStyles({ headerHeight, navbarAsideWidth });
   const [active, setActive] = useState(mainLinksData[0]);
 
   const mainLinks = mainLinksData.map((link) => (
@@ -106,11 +106,11 @@ const ChatNavbar = ({ navbarWidth, headerHeight }) => {
     >
       <UnstyledButton
         onClick={() => setActive(link)}
-        className={cx(classes.mainLink, {
-          [classes.mainLinkActive]: link.label === active.label,
+        className={cx(classes.iconLink, {
+          [classes.iconLinkActive]: link.label === active.label,
         })}
       >
-        <link.Icon stroke={1.5} />
+        <link.Icon  />
       </UnstyledButton>
     </Tooltip>
   ));

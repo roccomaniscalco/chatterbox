@@ -55,7 +55,7 @@ const UserProfile = () => {
                 borderStyle: "solid",
                 borderColor:
                   theme.colorScheme === "dark"
-                    ? theme.colors.dark[8]
+                    ? theme.colors.dark[7]
                     : theme.colors.gray[1],
               },
             })}
