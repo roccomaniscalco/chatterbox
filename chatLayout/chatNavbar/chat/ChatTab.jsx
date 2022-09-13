@@ -1,20 +1,9 @@
-import { Tooltip } from "@mantine/core";
+import { Stack, Text, Tooltip } from "@mantine/core";
 import { IconMessagePlus } from "@tabler/icons";
 import AppModal from "../../../components/AppModal";
 import TabHeader from "../TabHeader";
+import Channels from "./Channels";
 import NewChannelForm from "./NewChannelForm";
-
-const channels = [
-  {
-    id: 0,
-    adminId: 123,
-    name: "The homies",
-    description: "A safe place for homies to kiss each other goodnight",
-    image: "https://c.tenor.com/JEnYk1aBg2EAAAAC/gay-kiss.gif",
-    createdAt: 1662598392693,
-    users: [],
-  },
-];
 
 const ChatTab = () => {
   return (
@@ -22,18 +11,26 @@ const ChatTab = () => {
       <TabHeader
         title="Chat"
         actionItem={
-          <Tooltip
-            label="Create Channel"
-            withArrow
-            position="right"
-            openDelay={1000}
-          >
+          // <Tooltip
+          //   label="Create Channel"
+          //   withArrow
+          //   position="right"
+          //   openDelay={1000}
+          // >
             <AppModal Icon={IconMessagePlus} title="New Channel">
               <NewChannelForm />
             </AppModal>
-          </Tooltip>
+          // </Tooltip>
         }
       />
+      <Stack >
+        <div>
+          <Text size="sm" color="dimmed" pb={6} px="md">
+            Channels
+          </Text>
+          <Channels />
+        </div>
+      </Stack>
     </>
   );
 };

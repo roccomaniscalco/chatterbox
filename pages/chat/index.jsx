@@ -3,8 +3,8 @@ import { useScrollIntoView } from "@mantine/hooks";
 import pusherJs from "pusher-js";
 import { useEffect, useState } from "react";
 import { flushSync } from "react-dom";
-import ChatLayout from "../chatLayout/ChatLayout";
-import Message from "../components/Message";
+import ChatLayout from "../../chatLayout/ChatLayout";
+import Message from "../../components/Message";
 
 const Chat = () => {
   const { scrollIntoView: scrollToLastMessage, targetRef: lastMessageRef } =

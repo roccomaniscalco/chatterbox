@@ -28,9 +28,7 @@ const AppModal = ({ children, Icon, title, openInitially }) => {
       </Modal>
 
       <ActionIcon
-        variant="default"
         size="lg"
-        radius="md"
         onClick={handleOpen}
         aria-label={title}
       >

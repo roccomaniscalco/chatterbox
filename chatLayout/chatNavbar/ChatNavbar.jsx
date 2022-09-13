@@ -3,98 +3,102 @@ import {
   Center,
   createStyles,
   Navbar,
-  ThemeIcon,
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
 import { IconMessage, IconSettings, IconUsers } from "@tabler/icons";
 import { number } from "prop-types";
 import { useState } from "react";
-import UserProfile from "./UserProfile";
-import FriendsTab from "./friends/FriendsTab";
-import ChatTab from "./chat/ChatTab";
-import SettingsTab from "./settings/SettingsTab";
 import IconChatterbox from "../../components/IconChatterbox";
+import ChatTab from "./chat/ChatTab";
+import FriendsTab from "./friends/FriendsTab";
+import SettingsTab from "./settings/SettingsTab";
+import UserProfile from "./UserProfile";
 
-const useStyles = createStyles((theme, { headerHeight, navbarAsideWidth }) => ({
-  root: {
-    height: "100vh",
-    border: "none",
-    position: "absolute",
-    top: 0,
-  },
+const useStyles = createStyles(
+  (theme, { headerHeight, navbarWidth, navbarAsideWidth }) => ({
+    root: {
+      height: "100vh",
+      border: "none",
+      top: 0,
+    },
 
-  wrapper: {
-    display: "flex",
-  },
+    wrapper: {
+      display: "flex",
+    },
 
-  aside: {
-    display: "flex",
-    flex: `0 0 ${navbarAsideWidth}px`,
-    flexDirection: "column",
-    alignItems: "center",
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[7]
-        : theme.colors.gray[1],
-  },
-
-  main: {
-    flex: 1,
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[8]
-        : theme.colors.gray[0],
-
-    borderInline: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[2]
-    }`,
-  },
-
-  iconLink: {
-    width: 44,
-    height: 44,
-    borderRadius: theme.radius.md,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[0]
-        : theme.colors.gray[7],
-
-    "&:hover": {
+    aside: {
+      display: "flex",
+      width: navbarAsideWidth,
+      flexDirection: "column",
+      alignItems: "center",
       backgroundColor:
         theme.colorScheme === "dark"
-          ? theme.colors.dark[6]
-          : theme.colors.gray[3],
+          ? theme.colors.dark[7]
+          : theme.colors.gray[1],
     },
-  },
 
-  iconLinkActive: {
-    "&, &:hover": {
-      backgroundColor: theme.fn.variant({
-        variant: "filled",
-        color: theme.primaryColor,
-      }).background,
-      color: theme.white,
+    main: {
+      width: navbarWidth - navbarAsideWidth,
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[8]
+          : theme.colors.gray[0],
+
+      borderInline: `1px solid ${
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[7]
+          : theme.colors.gray[2]
+      }`,
     },
-  },
 
-  header: {
-    height: headerHeight,
-    borderBottom: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[2]
-    }`,
-  },
+    iconLink: {
+      width: 44,
+      height: 44,
+      borderRadius: theme.radius.md,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[0]
+          : theme.colors.gray[7],
 
-  iconChatterbox: {
-    stroke:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[4]
-        : theme.colors.gray[6],
-  },
-}));
+      "&:hover": {
+        backgroundColor:
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[6]
+            : theme.colors.gray[3],
+      },
+    },
+
+    iconLinkActive: {
+      "&, &:hover": {
+        backgroundColor: theme.fn.variant({
+          variant: "filled",
+          color: theme.primaryColor,
+        }).background,
+        color: theme.white,
+      },
+    },
+
+    header: {
+      height: headerHeight,
+      borderBottom: `1px solid ${
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[7]
+          : theme.colors.gray[2]
+      }`,
+    },
+
+    iconChatterbox: {
+      stroke:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[4]
+          : theme.colors.gray[6],
+    },
+  })
+);
 
 const mainLinksData = [
   { Icon: IconMessage, label: "Chat", Component: ChatTab },
@@ -103,7 +107,11 @@ const mainLinksData = [
 ];
 
 const ChatNavbar = ({ navbarWidth, navbarAsideWidth, headerHeight }) => {
-  const { classes, cx } = useStyles({ headerHeight, navbarAsideWidth });
+  const { classes, cx } = useStyles({
+    headerHeight,
+    navbarWidth,
+    navbarAsideWidth,
+  });
   const [active, setActive] = useState(mainLinksData[0]);
 
   const mainLinks = mainLinksData.map((link) => (
