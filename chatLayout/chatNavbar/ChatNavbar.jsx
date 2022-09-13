@@ -1,7 +1,9 @@
 import {
   Box,
+  Center,
   createStyles,
   Navbar,
+  ThemeIcon,
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
@@ -12,7 +14,7 @@ import UserProfile from "./UserProfile";
 import FriendsTab from "./friends/FriendsTab";
 import ChatTab from "./chat/ChatTab";
 import SettingsTab from "./settings/SettingsTab";
-
+import IconChatterbox from "../../components/IconChatterbox";
 
 const useStyles = createStyles((theme, { headerHeight, navbarAsideWidth }) => ({
   root: {
@@ -85,6 +87,13 @@ const useStyles = createStyles((theme, { headerHeight, navbarAsideWidth }) => ({
       theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[2]
     }`,
   },
+
+  iconChatterbox: {
+    stroke:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[4]
+        : theme.colors.gray[6],
+  },
 }));
 
 const mainLinksData = [
@@ -111,7 +120,7 @@ const ChatNavbar = ({ navbarWidth, navbarAsideWidth, headerHeight }) => {
           [classes.iconLinkActive]: link.label === active.label,
         })}
       >
-        <link.Icon  />
+        <link.Icon />
       </UnstyledButton>
     </Tooltip>
   ));
@@ -120,8 +129,14 @@ const ChatNavbar = ({ navbarWidth, navbarAsideWidth, headerHeight }) => {
     <Navbar width={{ base: navbarWidth }} className={classes.root}>
       <Navbar.Section grow className={classes.wrapper}>
         <div className={classes.aside}>
-          <div className={classes.header}></div>
-          <Box pb="md" mt="xs">
+          <Center className={classes.header}>
+            <IconChatterbox
+              size={36}
+              stroke={3.5}
+              className={classes.iconChatterbox}
+            />
+          </Center>
+          <Box pb="lg" mt="xs">
             <UserProfile />
           </Box>
           {mainLinks}

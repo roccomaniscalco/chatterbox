@@ -7,7 +7,7 @@ const TabHeader = ({ title, actionItem }) => {
     <Group
       mt="xs"
       mx="md"
-      mb="md"
+      mb="sm"
       position="apart"
       sx={{ height: 44, display: "flex", alignItems: "center" }}
     >

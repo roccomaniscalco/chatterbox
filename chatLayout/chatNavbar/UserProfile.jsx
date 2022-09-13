@@ -70,22 +70,7 @@ const UserProfile = () => {
           {session?.user.email}
         </Text>
 
-        <UnstyledButton
-          onClick={handleSignOut}
-          mt="lg"
-          sx={(theme) => ({
-            color:
-              theme.colorScheme === "dark"
-                ? theme.colors.indigo[3]
-                : theme.colors.indigo[6],
-            "&:hover": {
-              color:
-                theme.colorScheme === "dark"
-                  ? theme.colors.indigo[4]
-                  : theme.colors.indigo[7],
-            },
-          })}
-        >
+        <UnstyledButton onClick={handleSignOut} mt="lg">
           <Group spacing="xs">
             <IconLogout size={16} />
             <Text size="sm">Sign Out</Text>

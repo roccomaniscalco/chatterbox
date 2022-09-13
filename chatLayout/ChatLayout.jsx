@@ -5,7 +5,7 @@ import MessageInput from "../components/MessageInput";
 
 // sizes in pixels (px)
 const HEADER_HEIGHT = 70;
-const NAVBAR_ASIDE_WIDTH = 60;
+const NAVBAR_ASIDE_WIDTH = 64;
 const NAVBAR_WIDTH = 320;
 const FOOTER_HEIGHT = 63;
 
