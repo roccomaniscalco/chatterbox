@@ -1,12 +1,12 @@
 import { Stack, Text, Title } from "@mantine/core";
 import DarkModeToggle from "./DarkModeToggle";
 import PrimaryColorPicker from "./PrimaryColorPicker";
-import TabTitle from "./TabTitle";
+import TabHeader from "./TabHeader";
 
 const SettingsTab = () => {
   return (
     <>
-      <TabTitle>Settings</TabTitle>
+      <TabHeader title="Settings"/>
       <Stack spacing="lg" px="md">
         <div>
           <Text size="sm" color="dimmed" pb={6}>

@@ -1,14 +1,7 @@
-import { Title } from "@mantine/core";
-import TabTitle from "./TabTitle";
+import TabHeader from "./TabHeader";
 
 const FriendsTab = () => {
-  return (
-    <>
-      <TabTitle order={4} p="md">
-        Friends
-      </TabTitle>
-    </>
-  );
+  return <TabHeader title="Friends" />;
 };
 
 export default FriendsTab;
