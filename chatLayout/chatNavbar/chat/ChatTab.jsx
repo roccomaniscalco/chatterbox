@@ -11,25 +11,18 @@ const ChatTab = () => {
       <TabHeader
         title="Chat"
         actionItem={
-          // <Tooltip
-          //   label="Create Channel"
-          //   withArrow
-          //   position="right"
-          //   openDelay={1000}
-          // >
-            <AppModal Icon={IconMessagePlus} title="New Channel">
-              <NewChannelForm />
-            </AppModal>
-          // </Tooltip>
+          <AppModal Icon={IconMessagePlus} title="New Channel">
+            <NewChannelForm />
+          </AppModal>
         }
       />
-      <Stack >
-        <div>
+      <Stack>
+        <Stack spacing={0}>
           <Text size="sm" color="dimmed" pb={6} px="md">
             Channels
           </Text>
           <Channels />
-        </div>
+        </Stack>
       </Stack>
     </>
   );

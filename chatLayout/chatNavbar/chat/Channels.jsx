@@ -1,55 +1,45 @@
-import { Avatar, Group, NavLink, Paper, Text } from "@mantine/core";
+import { Avatar, NavLink } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
-const channelsData = [
-  {
-    id: 0,
-    adminId: 123,
-    name: "The Homies",
-    slug: "homies",
-    description: "A safe place for homies to kiss each other goodnight",
-    image: "https://c.tenor.com/JEnYk1aBg2EAAAAC/gay-kiss.gif",
-    createdAt: 1662598392693,
-    users: [],
-  },
-  {
-    id: 1,
-    adminId: 123,
-    name: "The Super Broskis kfrkflr;vkv;l4tkvdkfr;kf;rkfkr4",
-    slug: "broskis",
-    createdAt: 1662598392693,
-    users: [],
-  },
-];
+import api from "../../../lib/api";
 
 const Channels = () => {
   const router = useRouter();
+  const { data: userChannels, isLoading } = useQuery(
+    ["channels"],
+    api.getChannelsByUser,
+    { staleTime: Infinity } // Never refetch
+  );
 
-  const channels = channelsData.map((channel) => (
-    // TODO: force user to create unique slug in NewChannelForm
-    <Link href={`/chat/${channel.slug}`} passHref key={channel.id}>
-      <NavLink
-        styles={{
-          root: {
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-          },
-          label: {
-            textOverflow: "ellipsis",
-          },
-        }}
-        active={router.asPath === `/chat/${channel.slug}`}
-        icon={<Avatar src={channel.image}>{channel.name[0]}</Avatar>}
-        label={channel.name}
-        description={`${channel.users.length} chatters`}
-        px="md"
-        component="a"
-      />
-    </Link>
-  ));
+  if (isLoading) return "loading...";
 
-  return <div>{channels}</div>;
+  return (
+    <div style={{ height: "100%" }}>
+      {Object.values(userChannels).map((channel) => (
+        // TODO: force user to create unique slug in NewChannelForm
+        <Link href={`/chat/${channel.name}`} passHref key={channel.id}>
+          <NavLink
+            styles={{
+              root: {
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+              },
+              label: {
+                textOverflow: "ellipsis",
+              },
+            }}
+            active={router.asPath === `/chat/${channel.name}`}
+            icon={<Avatar src={channel.image}>{channel.name[0]}</Avatar>}
+            label={channel.name}
+            description={`${channel._count.users} chatters`}
+            px="md"
+            component="a"
+          />
+        </Link>
+      ))}
+    </div>
+  );
 };
 
 export default Channels;

@@ -6,6 +6,8 @@ import App from "next/app";
 import Head from "next/head";
 import ThemeProvider from "../styles/ThemeProvider";
 
+const queryClient = new QueryClient();
+
 const MyApp = ({
   Component,
   colorScheme,
@@ -13,7 +15,6 @@ const MyApp = ({
   pageProps: { session, ...pageProps },
 }) => {
   const getLayout = Component.getLayout || ((page) => page);
-  const queryClient = new QueryClient();
 
   return (
     <>

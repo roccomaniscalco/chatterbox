@@ -3,12 +3,13 @@ import {
   Center,
   createStyles,
   Navbar,
+  ScrollArea,
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
 import { IconMessage, IconSettings, IconUsers } from "@tabler/icons";
 import { number } from "prop-types";
-import { useState } from "react";
+import { memo, useState } from "react";
 import IconChatterbox from "../../components/IconChatterbox";
 import ChatTab from "./chat/ChatTab";
 import FriendsTab from "./friends/FriendsTab";
@@ -18,18 +19,22 @@ import UserProfile from "./UserProfile";
 const useStyles = createStyles(
   (theme, { headerHeight, navbarWidth, navbarAsideWidth }) => ({
     root: {
+      width: navbarWidth,
       height: "100vh",
       border: "none",
       top: 0,
-    },
-
-    wrapper: {
-      display: "flex",
+      display: "grid",
+      gridTemplateColumns: "repeat(5, 1fr)",
+      gridTemplateRows: `${headerHeight}px 1fr`,
+      gridTemplateAreas: `
+        "aside head head head head"
+        "aside main main main main"
+        `,
     },
 
     aside: {
+      gridArea: "aside",
       display: "flex",
-      width: navbarAsideWidth,
       flexDirection: "column",
       alignItems: "center",
       backgroundColor:
@@ -39,7 +44,7 @@ const useStyles = createStyles(
     },
 
     main: {
-      width: navbarWidth - navbarAsideWidth,
+      gridArea: "main",
       backgroundColor:
         theme.colorScheme === "dark"
           ? theme.colors.dark[8]
@@ -50,6 +55,10 @@ const useStyles = createStyles(
           ? theme.colors.dark[7]
           : theme.colors.gray[2]
       }`,
+    },
+
+    mainContent: {
+      width: navbarWidth - navbarAsideWidth - 2, // 1px border on each side
     },
 
     iconLink: {
@@ -83,12 +92,17 @@ const useStyles = createStyles(
     },
 
     header: {
-      height: headerHeight,
-      borderBottom: `1px solid ${
+      gridArea: "head",
+      border: `1px solid ${
         theme.colorScheme === "dark"
           ? theme.colors.dark[7]
           : theme.colors.gray[2]
       }`,
+      borderTop: "none",
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[8]
+          : theme.colors.gray[0],
     },
 
     iconChatterbox: {
@@ -100,21 +114,25 @@ const useStyles = createStyles(
   })
 );
 
-const mainLinksData = [
+const asideData = [
   { Icon: IconMessage, label: "Chat", Component: ChatTab },
   { Icon: IconUsers, label: "Friends", Component: FriendsTab },
   { Icon: IconSettings, label: "Settings", Component: SettingsTab },
 ];
 
-const ChatNavbar = ({ navbarWidth, navbarAsideWidth, headerHeight }) => {
+const ChatNavbar = memo(function ChatNavbar({
+  navbarWidth,
+  navbarAsideWidth,
+  headerHeight,
+}) {
   const { classes, cx } = useStyles({
     headerHeight,
     navbarWidth,
     navbarAsideWidth,
   });
-  const [active, setActive] = useState(mainLinksData[0]);
+  const [active, setActive] = useState(asideData[0]);
 
-  const mainLinks = mainLinksData.map((link) => (
+  const asideIcons = asideData.map((link) => (
     <Tooltip
       label={link.label}
       position="right"
@@ -135,28 +153,30 @@ const ChatNavbar = ({ navbarWidth, navbarAsideWidth, headerHeight }) => {
 
   return (
     <Navbar width={{ base: navbarWidth }} className={classes.root}>
-      <Navbar.Section grow className={classes.wrapper}>
-        <div className={classes.aside}>
-          <Center className={classes.header}>
-            <IconChatterbox
-              size={40}
-              stroke={3.5}
-              className={classes.iconChatterbox}
-            />
-          </Center>
-          <Box pb="xl" mt="xs">
-            <UserProfile />
-          </Box>
-          {mainLinks}
-        </div>
-        <div className={classes.main}>
-          <div className={classes.header}></div>
+      <Navbar.Section className={classes.aside}>
+        <Center sx={{ height: headerHeight }}>
+          <IconChatterbox
+            size={40}
+            stroke={3.5}
+            className={classes.iconChatterbox}
+          />
+        </Center>
+        <Box pb="xl" mt="xs">
+          <UserProfile />
+        </Box>
+        {asideIcons}
+      </Navbar.Section>
+
+      <Navbar.Section className={classes.header}></Navbar.Section>
+
+      <Navbar.Section component={ScrollArea} className={classes.main}>
+        <div className={classes.mainContent}>
           <active.Component />
         </div>
       </Navbar.Section>
     </Navbar>
   );
-};
+});
 
 ChatNavbar.propTypes = {
   navbarWidth: number.isRequired,
