@@ -1,6 +1,8 @@
-import { ActionIcon, Tooltip } from "@mantine/core";
+import { Tooltip } from "@mantine/core";
 import { IconMessagePlus } from "@tabler/icons";
+import AppModal from "../../../components/AppModal";
 import TabHeader from "../TabHeader";
+import NewChannelForm from "./NewChannelForm";
 
 const channels = [
   {
@@ -20,13 +22,15 @@ const ChatTab = () => {
       <TabHeader
         title="Chat"
         actionItem={
-          <Tooltip label="Create Channel" withArrow position="right" openDelay={1000}>
-            <ActionIcon
-              size="lg"
-              sx={(theme) => ({ color: theme.fn.primaryColor() })}
-            >
-              <IconMessagePlus />
-            </ActionIcon>
+          <Tooltip
+            label="Create Channel"
+            withArrow
+            position="right"
+            openDelay={1000}
+          >
+            <AppModal Icon={IconMessagePlus} title="New Channel">
+              <NewChannelForm />
+            </AppModal>
           </Tooltip>
         }
       />

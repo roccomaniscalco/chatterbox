@@ -4,10 +4,10 @@ import { showNotification } from "@mantine/notifications";
 import { IconPencil, IconPhoto, IconPlus, IconSignature } from "@tabler/icons";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import useDebouncedMutation from "../hooks/debouncedMutation";
-import api from "../lib/api";
+import useDebouncedMutation from "../../../hooks/debouncedMutation";
+import api from "../../../lib/api";
 
-const NewChannelModal = () => {
+const NewChannelForm = () => {
   const { data: session } = useSession();
 
   const channelExistsMutation = useDebouncedMutation(api.doesChannelExist);
@@ -100,4 +100,4 @@ const NewChannelModal = () => {
   );
 };
 
-export default NewChannelModal;
+export default NewChannelForm;
