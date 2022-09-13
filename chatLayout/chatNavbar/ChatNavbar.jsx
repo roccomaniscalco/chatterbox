@@ -139,12 +139,12 @@ const ChatNavbar = ({ navbarWidth, navbarAsideWidth, headerHeight }) => {
         <div className={classes.aside}>
           <Center className={classes.header}>
             <IconChatterbox
-              size={36}
+              size={40}
               stroke={3.5}
               className={classes.iconChatterbox}
             />
           </Center>
-          <Box pb="lg" mt="xs">
+          <Box pb="xl" mt="xs">
             <UserProfile />
           </Box>
           {mainLinks}
