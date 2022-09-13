@@ -1,21 +1,33 @@
 import { ColorSchemeProvider, Global, MantineProvider } from "@mantine/core";
 import { setCookie } from "cookies-next";
 import { node } from "prop-types";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import colors from "./colors";
 
-const ThemeProvider = ({ children, initialColorScheme }) => {
+const ThemeProvider = ({
+  children,
+  initialColorScheme,
+  initialPrimaryColor,
+}) => {
   const [colorScheme, setColorScheme] = useState(initialColorScheme);
+  const [themePrimaryColor, setThemePrimaryColor] =
+    useState(initialPrimaryColor);
 
   const toggleColorScheme = (value) => {
     const nextColorScheme =
       value || (colorScheme === "dark" ? "light" : "dark");
     setColorScheme(nextColorScheme);
-    // when color scheme is updated save it to cookie
     setCookie("color-scheme", nextColorScheme, {
       maxAge: 60 * 60 * 24 * 30,
     });
   };
+
+  const setPrimaryColor = useCallback((color) => {
+    setThemePrimaryColor(color);
+    setCookie("primary-color", color, {
+      maxAge: 60 * 60 * 24 * 30,
+    });
+  }, []);
 
   return (
     <ColorSchemeProvider
@@ -27,12 +39,15 @@ const ThemeProvider = ({ children, initialColorScheme }) => {
         withGlobalStyles
         theme={{
           colorScheme,
-          primaryColor: "indigo",
+          primaryColor: themePrimaryColor,
           colors: colors,
           black: "#010409",
           white: "#ffffff",
           shadows: {
             xl: "0px 5px 20px rgba(0, 0, 0, .6)",
+          },
+          other: {
+            setPrimaryColor,
           },
         }}
       >

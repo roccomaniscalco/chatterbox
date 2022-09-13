@@ -9,6 +9,7 @@ import ThemeProvider from "../styles/ThemeProvider";
 const MyApp = ({
   Component,
   colorScheme,
+  primaryColor,
   pageProps: { session, ...pageProps },
 }) => {
   const getLayout = Component.getLayout || ((page) => page);
@@ -19,7 +20,7 @@ const MyApp = ({
       <Head>
         <title>chatterbox</title>
       </Head>
-      <ThemeProvider initialColorScheme={colorScheme}>
+      <ThemeProvider initialColorScheme={colorScheme} initialPrimaryColor={primaryColor}>
         <NotificationsProvider>
           <QueryClientProvider client={queryClient}>
             <SessionProvider session={session}>
@@ -37,6 +38,7 @@ MyApp.getInitialProps = async (context) => {
   return {
     ...appProps,
     colorScheme: getCookie("color-scheme", context.ctx) || "light",
+    primaryColor: getCookie("primary-color", context.ctx) || "blue"
   };
 };
 export default MyApp;

@@ -2,7 +2,6 @@ import {
   Box,
   createStyles,
   Navbar,
-  Title,
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
@@ -32,7 +31,9 @@ const useStyles = createStyles((theme, { headerHeight }) => ({
     flexDirection: "column",
     alignItems: "center",
     backgroundColor:
-      theme.colorScheme === "dark" ? theme.colors.dark[9] : theme.white,
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[7]
+        : theme.colors.gray[1],
   },
 
   main: {
@@ -62,19 +63,18 @@ const useStyles = createStyles((theme, { headerHeight }) => ({
     "&:hover": {
       backgroundColor:
         theme.colorScheme === "dark"
-          ? theme.colors.dark[8]
-          : theme.colors.gray[0],
+          ? theme.colors.dark[6]
+          : theme.colors.gray[3],
     },
   },
 
   mainLinkActive: {
     "&, &:hover": {
       backgroundColor: theme.fn.variant({
-        variant: "light",
+        variant: "filled",
         color: theme.primaryColor,
       }).background,
-      color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
-        .color,
+      color: theme.white,
     },
   },
 
@@ -88,7 +88,7 @@ const useStyles = createStyles((theme, { headerHeight }) => ({
 
 const mainLinksData = [
   { Icon: IconMessage, label: "Messages", Component: MessagesTab },
-  { Icon: IconUsers, label: "Friends",  Component: FriendsTab },
+  { Icon: IconUsers, label: "Friends", Component: FriendsTab },
   { Icon: IconSettings, label: "Settings", Component: SettingsTab },
 ];
 
@@ -120,14 +120,14 @@ const ChatNavbar = ({ navbarWidth, headerHeight }) => {
       <Navbar.Section grow className={classes.wrapper}>
         <div className={classes.aside}>
           <div className={classes.header}></div>
-          <Box pt="xs" pb="xl">
+          <Box pb="md" mt="xs">
             <UserProfile />
           </Box>
           {mainLinks}
         </div>
         <div className={classes.main}>
           <div className={classes.header}></div>
-          <active.Component/>
+          <active.Component />
         </div>
       </Navbar.Section>
     </Navbar>
@@ -135,8 +135,8 @@ const ChatNavbar = ({ navbarWidth, headerHeight }) => {
 };
 
 ChatNavbar.propTypes = {
-  navbarWidth: number,
-  headerHeight: number,
+  navbarWidth: number.isRequired,
+  headerHeight: number.isRequired,
 };
 
 export default ChatNavbar;

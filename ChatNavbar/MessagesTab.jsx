@@ -1,4 +1,5 @@
 import { Title } from "@mantine/core";
+import TabTitle from "./TabTitle";
 
 const channels = [
     {
@@ -15,9 +16,9 @@ const channels = [
 const MessagesTab = () => {
   return (
     <>
-      <Title order={4} p="md">
+      <TabTitle >
         Messages
-      </Title>
+      </TabTitle>
     </>
   );
 };

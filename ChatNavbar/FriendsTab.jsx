@@ -1,11 +1,12 @@
 import { Title } from "@mantine/core";
+import TabTitle from "./TabTitle";
 
 const FriendsTab = () => {
   return (
     <>
-      <Title order={4} p="md">
+      <TabTitle order={4} p="md">
         Friends
-      </Title>
+      </TabTitle>
     </>
   );
 };
