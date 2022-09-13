@@ -1,4 +1,4 @@
-import TabHeader from "./TabHeader";
+import TabHeader from "../TabHeader";
 
 const FriendsTab = () => {
   return <TabHeader title="Friends" />;

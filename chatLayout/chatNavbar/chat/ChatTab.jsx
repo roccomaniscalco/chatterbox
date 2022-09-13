@@ -1,6 +1,6 @@
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { IconMessagePlus } from "@tabler/icons";
-import TabHeader from "./TabHeader";
+import TabHeader from "../TabHeader";
 
 const channels = [
   {

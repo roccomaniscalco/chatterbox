@@ -9,9 +9,10 @@ import { IconMessage, IconSettings, IconUsers } from "@tabler/icons";
 import { number } from "prop-types";
 import { useState } from "react";
 import UserProfile from "./UserProfile";
-import FriendsTab from "./FriendsTab";
-import ChatTab from "./MessagesTab";
-import SettingsTab from "./SettingsTab";
+import FriendsTab from "./friends/FriendsTab";
+import ChatTab from "./chat/ChatTab";
+import SettingsTab from "./settings/SettingsTab";
+
 
 const useStyles = createStyles((theme, { headerHeight, navbarAsideWidth }) => ({
   root: {
