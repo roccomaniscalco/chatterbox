@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const channelExists = async (req, res) => {
-  console.log(req.query)
   try {
     const { name } = req.query;
     if (!name) {

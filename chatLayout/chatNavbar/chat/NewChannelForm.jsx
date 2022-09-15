@@ -2,18 +2,27 @@ import { Button, Loader, Stack, Textarea, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconPencil, IconPhoto, IconPlus, IconSignature } from "@tabler/icons";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import useDebouncedMutation from "../../../hooks/debouncedMutation";
 import api from "../../../lib/api";
 
 const NewChannelForm = () => {
   const { data: session } = useSession();
+  const queryClient = useQueryClient();
+  const router = useRouter();
 
-  const channelExistsMutation = useDebouncedMutation(api.doesChannelExist);
-  const createChannelMutation = useMutation(api.createChannel, {
+  const channelExists = useDebouncedMutation(api.doesChannelExist);
+  const createChannel = useMutation(api.createChannel, {
     onSuccess: () => {
+      // invalidate channels query
+      queryClient.invalidateQueries(["channels"]);
+      // redirect to new channel
+      router.push(`/chat/${channelForm.values.name}`);
+      // reset form
       channelForm.reset();
+      // show success notification
       showNotification({
         title: "Channel Created",
         message: `Start chatting in "${channelForm.values.name}"`,
@@ -32,7 +41,7 @@ const NewChannelForm = () => {
     validateInputOnChange: ["name"],
     validate: {
       name: (value) => {
-        channelExistsMutation.debouncedMutate(value, {
+        channelExists.debouncedMutate(value, {
           debounceMs: 500,
           onSuccess: (channelExists) => {
             if (channelExists)
@@ -48,8 +57,8 @@ const NewChannelForm = () => {
     event.preventDefault();
     if (channelForm.values.name === "") {
       channelForm.setFieldError("name", "Channel name is required");
-    } else if (channelExistsMutation.data === false) {
-      createChannelMutation.mutate({
+    } else if (channelExists.data === false) {
+      createChannel.mutate({
         ...channelForm.values,
         userId: session.user.id,
       });
@@ -64,8 +73,8 @@ const NewChannelForm = () => {
           description="Channel names are unique and cannot be changed."
           icon={<IconSignature />}
           rightSection={
-            (channelExistsMutation.isDebouncing ||
-              channelExistsMutation.isLoading) && <Loader size="xs" />
+            (channelExists.isDebouncing ||
+              channelExists.isLoading) && <Loader size="xs" />
           }
           withAsterisk
           autoComplete="off"
@@ -91,7 +100,7 @@ const NewChannelForm = () => {
           mt="xl"
           leftIcon={<IconPlus size={16} />}
           type="submit"
-          loading={createChannelMutation.isLoading}
+          loading={createChannel.isLoading}
         >
           Create Channel
         </Button>

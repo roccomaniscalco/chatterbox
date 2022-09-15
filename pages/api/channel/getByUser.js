@@ -29,7 +29,7 @@ const getChannelsByUser = async (req, res) => {
         },
       });
 
-      res.json({ ...channels });
+      res.json(channels);
     } else {
       res.status(401).json({ message: "Unauthorized" });
     }

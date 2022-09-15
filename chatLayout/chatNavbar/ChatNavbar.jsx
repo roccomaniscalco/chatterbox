@@ -24,11 +24,11 @@ const useStyles = createStyles(
       border: "none",
       top: 0,
       display: "grid",
-      gridTemplateColumns: "repeat(5, 1fr)",
+      gridTemplateColumns: `${navbarAsideWidth}px  1fr`,
       gridTemplateRows: `${headerHeight}px 1fr`,
       gridTemplateAreas: `
-        "aside head head head head"
-        "aside main main main main"
+        "aside head"
+        "aside main"
         `,
     },
 
