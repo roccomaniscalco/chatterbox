@@ -38,8 +38,8 @@ const NewChannelForm = () => {
 
   const channelForm = useForm({
     initialValues: {
-      slug: "",
       name: "",
+      slug: "",
       description: "",
       image: "",
       userId: "",
@@ -81,6 +81,14 @@ const NewChannelForm = () => {
     <form onSubmit={channelForm.onSubmit(handleSubmit)}>
       <Stack spacing="md">
         <TextInput
+          label="Name"
+          icon={<IconSignature />}
+          withAsterisk
+          autoComplete="off"
+          maxLength={191}
+          {...channelForm.getInputProps("name")}
+        />
+        <TextInput
           label="Slug"
           description="Channel slugs are unique and cannot be changed."
           icon={
@@ -96,14 +104,6 @@ const NewChannelForm = () => {
           data-autofocus
           maxLength={191}
           {...channelForm.getInputProps("slug")}
-        />
-        <TextInput
-          label="Name"
-          icon={<IconSignature />}
-          withAsterisk
-          autoComplete="off"
-          maxLength={191}
-          {...channelForm.getInputProps("name")}
         />
         <TextInput
           label="Image Url"
