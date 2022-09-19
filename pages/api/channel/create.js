@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { authOptions } from "../../../lib/auth";
 
 const prisma = new PrismaClient();
 
