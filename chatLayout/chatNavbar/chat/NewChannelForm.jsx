@@ -38,23 +38,23 @@ const NewChannelForm = () => {
 
   const channelForm = useForm({
     initialValues: {
-      name: "",
       slug: "",
+      name: "",
       description: "",
       image: "",
       userId: "",
     },
     validateInputOnChange: ["name", "slug"],
     validate: {
-      name: (value) => {
-        if (!value) return "Channel name is required";
-      },
       slug: (value) => {
         // ensure slug is not empty
         if (!value) return "Channel slug is required";
         // only allow lowercase letters, numbers, and dashes
         if (!/^[a-z0-9-]*$/.test(value))
           return "Only lowercase letters, numbers, and dashes are allowed";
+      },
+      name: (value) => {
+        if (!value) return "Channel name is required";
       },
     },
   });
@@ -81,14 +81,6 @@ const NewChannelForm = () => {
     <form onSubmit={channelForm.onSubmit(handleSubmit)}>
       <Stack spacing="md">
         <TextInput
-          label="Name"
-          icon={<IconSignature />}
-          withAsterisk
-          autoComplete="off"
-          maxLength={191}
-          {...channelForm.getInputProps("name")}
-        />
-        <TextInput
           label="Slug"
           description="Channel slugs are unique and cannot be changed."
           icon={
@@ -104,6 +96,14 @@ const NewChannelForm = () => {
           data-autofocus
           maxLength={191}
           {...channelForm.getInputProps("slug")}
+        />
+        <TextInput
+          label="Name"
+          icon={<IconSignature />}
+          withAsterisk
+          autoComplete="off"
+          maxLength={191}
+          {...channelForm.getInputProps("name")}
         />
         <TextInput
           label="Image Url"
