@@ -1,4 +1,4 @@
-import { Stack, Text, Tooltip } from "@mantine/core";
+import { Stack, Text } from "@mantine/core";
 import { IconMessagePlus } from "@tabler/icons";
 import AppModal from "../../../components/AppModal";
 import TabHeader from "../TabHeader";
