@@ -1,11 +1,16 @@
-import { Button, Loader, Stack, Textarea, TextInput } from "@mantine/core";
+import { Button, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { IconPencil, IconPhoto, IconPlus, IconSignature } from "@tabler/icons";
+import {
+  IconLink,
+  IconPencil,
+  IconPhoto,
+  IconPlus,
+  IconSignature,
+} from "@tabler/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import useDebouncedMutation from "../../../hooks/debouncedMutation";
 import api from "../../../lib/api";
 
 const NewChannelForm = () => {
@@ -13,13 +18,13 @@ const NewChannelForm = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const channelExists = useDebouncedMutation(api.doesChannelExist);
+  const channelExists = useMutation(api.doesChannelExist);
   const createChannel = useMutation(api.createChannel, {
     onSuccess: () => {
       // invalidate channels query
       queryClient.invalidateQueries(["channels"]);
       // redirect to new channel
-      router.push(`/chat/${channelForm.values.name}`);
+      router.push(channelForm.values.slug);
       // reset form
       channelForm.reset();
       // show success notification
@@ -33,52 +38,70 @@ const NewChannelForm = () => {
 
   const channelForm = useForm({
     initialValues: {
+      slug: "",
       name: "",
       description: "",
       image: "",
       userId: "",
     },
-    validateInputOnChange: ["name"],
+    validateInputOnChange: ["name", "slug"],
     validate: {
       name: (value) => {
-        channelExists.debouncedMutate(value, {
-          debounceMs: 500,
-          onSuccess: (channelExists) => {
-            if (channelExists)
-              channelForm.setFieldError("name", "Channel name is taken");
-            else channelForm.setFieldError("name", null);
-          },
-        });
+        if (!value) return "Channel name is required";
+      },
+      slug: (value) => {
+        // ensure slug is not empty
+        if (!value) return "Channel slug is required";
+        // only allow lowercase letters, numbers, and dashes
+        if (!/^[a-z0-9-]*$/.test(value))
+          return "Only lowercase letters, numbers, and dashes are allowed";
       },
     },
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (channelForm.values.name === "") {
-      channelForm.setFieldError("name", "Channel name is required");
-    } else if (channelExists.data === false) {
-      createChannel.mutate({
-        ...channelForm.values,
-        userId: session.user.id,
-      });
-    }
+  const handleSubmit = (formValues) => {
+    // check if channel with slug already exists
+    channelExists.mutate(formValues.slug, {
+      onSuccess: (channelExists) => {
+        // disallow slugs that are already taken
+        if (channelExists)
+          channelForm.setFieldError("slug", "Channel slug is taken");
+        // create channel if slug is available
+        else {
+          createChannel.mutate({
+            ...formValues,
+            userId: session.user.id,
+          });
+        }
+      },
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={channelForm.onSubmit(handleSubmit)}>
       <Stack spacing="md">
         <TextInput
-          label="Name"
-          description="Channel names are unique and cannot be changed."
-          icon={<IconSignature />}
-          rightSection={
-            (channelExists.isDebouncing ||
-              channelExists.isLoading) && <Loader size="xs" />
+          label="Slug"
+          description="Channel slugs are unique and cannot be changed."
+          icon={
+            <>
+              <IconLink />
+              <Text size="sm">chatterbox.lol/</Text>
+            </>
           }
+          iconWidth={133}
+          styles={{ icon: { justifyContent: "start", paddingLeft: 8, gap: 8 } }}
           withAsterisk
           autoComplete="off"
           data-autofocus
+          maxLength={191}
+          {...channelForm.getInputProps("slug")}
+        />
+        <TextInput
+          label="Name"
+          icon={<IconSignature />}
+          withAsterisk
+          autoComplete="off"
           maxLength={191}
           {...channelForm.getInputProps("name")}
         />
@@ -100,7 +123,7 @@ const NewChannelForm = () => {
           mt="xl"
           leftIcon={<IconPlus size={16} />}
           type="submit"
-          loading={createChannel.isLoading}
+          loading={createChannel.isLoading || channelExists.isLoading}
         >
           Create Channel
         </Button>

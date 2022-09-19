@@ -4,14 +4,14 @@ const prisma = new PrismaClient();
 
 const channelExists = async (req, res) => {
   try {
-    const { name } = req.query;
-    if (!name) {
-      res.status(400).json({ message: "Name is required" });
+    const { slug } = req.query;
+    if (!slug) {
+      res.status(400).json({ message: "Slug is required" });
     }
 
     const channelCount = await prisma.channel.count({
       where: {
-        name,
+        slug,
       },
     });
 

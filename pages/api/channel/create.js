@@ -4,9 +4,10 @@ const prisma = new PrismaClient();
 
 const createChannel = async (req, res) => {
   try {
-    const { name, description, image, userId } = req.body;
+    const { slug, name, description, image, userId } = req.body;
     const channel = await prisma.channel.create({
       data: {
+        slug,
         name,
         description,
         image,

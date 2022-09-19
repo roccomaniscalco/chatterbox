@@ -42,7 +42,8 @@ model User {
 model Channel {
   id          String    @id @default(cuid())
   adminId     String
-  name        String    @unique
+  slug        String    @unique
+  name        String    
   description String?
   image       String?   @db.Text
   createdAt   DateTime  @default(now())
@@ -50,7 +51,7 @@ model Channel {
   users       User[]
   admin       User      @relation(name: "adminToChannels", fields: [adminId], references: [id])
 
-  @@index([name])
+  @@index([slug])
 }
 
 model Message {

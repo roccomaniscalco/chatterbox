@@ -1,7 +1,7 @@
 import { Text } from "@mantine/core";
 import { useRouter } from "next/router";
 import React from "react";
-import ChatLayout from "../../chatLayout/ChatLayout";
+import ChatLayout from "../chatLayout/ChatLayout";
 
 const SpecificChat = () => {
   const router = useRouter();

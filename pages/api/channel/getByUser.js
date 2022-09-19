@@ -14,6 +14,7 @@ const getChannelsByUser = async (req, res) => {
         select: {
           id: true,
           adminId: true,
+          slug: true,
           name: true,
           image: true,
           createdAt: true,
