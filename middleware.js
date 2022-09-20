@@ -1,4 +1,12 @@
-export { default } from "next-auth/middleware";
+import { withAuth } from "next-auth/middleware";
 
-// defines protected routes
-export const config = { matcher: ["/chat", "/api/pusher"] };
+// protect all pages and API routes except for index
+export default withAuth({
+  callbacks: {
+    authorized: ({ req, token }) => {
+      if (req.nextUrl.pathname === "/") return true;
+      else if (token) return true;
+      return false;
+    },
+  },
+});

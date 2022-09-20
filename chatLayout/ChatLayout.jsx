@@ -1,7 +1,6 @@
 import { AppShell, Footer, Header } from "@mantine/core";
-import { useSession } from "next-auth/react";
-import ChatNavbar from "./chatNavbar/ChatNavbar";
 import MessageInput from "../components/MessageInput";
+import ChatNavbar from "./chatNavbar/ChatNavbar";
 
 // sizes in pixels (px)
 const HEADER_HEIGHT = 70;
@@ -10,8 +9,6 @@ const NAVBAR_WIDTH = 320;
 const FOOTER_HEIGHT = 63;
 
 const ChatLayout = ({ children }) => {
-  const { data: session } = useSession();
-
   const chatHeader = (
     <Header
       height={HEADER_HEIGHT}
@@ -60,7 +57,7 @@ const ChatLayout = ({ children }) => {
       }
       footer={chatFooter}
     >
-      {session && children}
+      {children}
     </AppShell>
   );
 };

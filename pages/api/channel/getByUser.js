@@ -7,34 +7,28 @@ const prisma = new PrismaClient();
 const getChannelsByUser = async (req, res) => {
   try {
     const session = await unstable_getServerSession(req, res, authOptions);
-
-    if (session) {
-      const channels = await prisma.channel.findMany({
-        // select only the fields we need
-        select: {
-          id: true,
-          adminId: true,
-          slug: true,
-          name: true,
-          image: true,
-          createdAt: true,
-          _count: {
-            select: { users: true },
+    const channels = await prisma.channel.findMany({
+      // select only the fields we need
+      select: {
+        id: true,
+        adminId: true,
+        slug: true,
+        name: true,
+        image: true,
+        createdAt: true,
+        _count: {
+          select: { users: true },
+        },
+      },
+      where: {
+        users: {
+          some: {
+            id: session.user.id,
           },
         },
-        where: {
-          users: {
-            some: {
-              id: session.user.id,
-            },
-          },
-        },
-      });
-
-      res.json(channels);
-    } else {
-      res.status(401).json({ message: "Unauthorized" });
-    }
+      },
+    });
+    res.json(channels);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to get channels by user" });
