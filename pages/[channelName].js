@@ -17,11 +17,11 @@ const SpecificChat = () => {
   return (
     <>
       <ChatHeader height={HEADER_HEIGHT}>
-        <Group sx={{ height: "100%" }} position="apart">
+        <Group sx={{ height: "100%" }} position="apart" noWrap  >
           {isLoading ? (
             <Skeleton width={180} height={30} />
           ) : (
-            <Title order={4}>{channel?.name}</Title>
+            <Title order={4} lineClamp={1}>{channel?.name}</Title>
           )}
           {isLoading ? (
             <Group spacing={0}>
