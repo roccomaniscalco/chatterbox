@@ -1,8 +1,7 @@
 import { Avatar, Group, Skeleton, Text, Title, Tooltip } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import React from "react";
-import ChatHeader from "../chatLayout/chatHeader";
+import ChatHeader from "../chatLayout/ChatHeader";
 import ChatLayout from "../chatLayout/ChatLayout";
 import api from "../lib/api";
 import { HEADER_HEIGHT } from "../lib/constants";
