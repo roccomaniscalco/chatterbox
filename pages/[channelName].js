@@ -1,4 +1,4 @@
-import { Avatar, Group, Skeleton, Text, Title, Tooltip } from "@mantine/core";
+import { Avatar, Group, Skeleton, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import ChatHeader from "../chatLayout/ChatHeader";
@@ -16,11 +16,16 @@ const SpecificChat = () => {
   return (
     <>
       <ChatHeader height={HEADER_HEIGHT}>
-        <Group sx={{ height: "100%" }} position="apart" noWrap  >
+        <Group sx={{ height: "100%" }} position="apart" noWrap>
           {isLoading ? (
-            <Skeleton width={180} height={30} />
+            <Skeleton width={180} height={34} />
           ) : (
-            <Title order={4} lineClamp={1}>{channel?.name}</Title>
+            <Group spacing="xs">
+              <Avatar src={channel.image}>{channel.name[0]}</Avatar>
+              <Title order={4} lineClamp={1}>
+                {channel.name}
+              </Title>
+            </Group>
           )}
           {isLoading ? (
             <Group spacing={0}>
@@ -39,21 +44,9 @@ const SpecificChat = () => {
           ) : (
             <Avatar.Group>
               {channel.users.map((user) => (
-                <Tooltip label={user.name} key={user.id}>
-                  <Avatar
-                    src={user.image}
-                    radius="xl"
-                    sx={{
-                      transition: "transform 0.2s ease",
-                      "&:hover": {
-                        transform: "scale(1.1)",
-                        zIndex: 1,  
-                      },
-                    }}
-                  >
-                    {user.name[0]}
-                  </Avatar>
-                </Tooltip>
+                <Avatar src={user.image} radius="xl" key={user.id}>
+                  {user.name[0]}
+                </Avatar>
               ))}
             </Avatar.Group>
           )}
