@@ -28,22 +28,48 @@ model Account {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  messages      Message[]
-  channels      Channel[]
-  adminChannels Channel[] @relation(name: "adminToChannels")
+  id                     String          @id @default(cuid())
+  name                   String?
+  email                  String?         @unique
+  emailVerified          DateTime?
+  image                  String?
+  accounts               Account[]
+  messages               Message[]
+  channels               Channel[]
+  adminChannels          Channel[]       @relation(name: "adminToChannels")
+  friendshipsAs1         Friendship[]    @relation(name: "friendshipsAs1")
+  friendshipsAs2         Friendship[]    @relation(name: "friendshipsAs2")
+  friendRequestsSent     FriendRequest[] @relation(name: "friendRequestsSent")
+  friendRequestsReceived FriendRequest[] @relation(name: "friendRequestsReceived")
+}
+
+model Friendship {
+  id        String   @id @default(cuid())
+  user1     User     @relation(name: "friendshipsAs1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user1Id   String
+  user2     User     @relation(name: "friendshipsAs2", fields: [user2Id], references: [id], onDelete: Cascade)
+  user2Id   String
+  createdAt DateTime @default(now())
+
+  @@unique([user1Id, user2Id])
+}
+
+model FriendRequest {
+  id         String   @id @default(cuid())
+  sender     User     @relation(name: "friendRequestsSent", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId   String
+  receiver   User     @relation(name: "friendRequestsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId String
+  createdAt  DateTime @default(now())
+
+  @@unique([senderId, receiverId])
 }
 
 model Channel {
   id          String    @id @default(cuid())
   adminId     String
   slug        String    @unique
-  name        String    
+  name        String
   description String?
   image       String?   @db.Text
   createdAt   DateTime  @default(now())

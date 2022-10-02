@@ -17,6 +17,7 @@ const AppModal = ({ children, Icon, title, openInitially }) => {
       <Modal
         opened={isOpened}
         onClose={handleClose}
+        centered
         padding="xl"
         title={
           <Text color="dimmed" size="xs" transform="uppercase" weight="bold">
@@ -27,11 +28,7 @@ const AppModal = ({ children, Icon, title, openInitially }) => {
         {children}
       </Modal>
 
-      <ActionIcon
-        size="lg"
-        onClick={handleOpen}
-        aria-label={title}
-      >
+      <ActionIcon size="lg" onClick={handleOpen} aria-label={title}>
         <Icon />
       </ActionIcon>
     </>
