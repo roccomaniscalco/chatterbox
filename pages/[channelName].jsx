@@ -20,7 +20,7 @@ const SpecificChat = () => {
           {isLoading ? (
             <Skeleton width={180} height={34} />
           ) : (
-            <Group spacing="xs">
+            <Group spacing="xs" noWrap>
               <Avatar src={channel.image}>{channel.name[0]}</Avatar>
               <Title order={4} lineClamp={1}>
                 {channel.name}
