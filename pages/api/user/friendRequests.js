@@ -7,10 +7,7 @@ const prisma = new PrismaClient();
 export default async function getUserFriendRequestsHandler(req, res) {
   try {
     const session = await unstable_getServerSession(req, res, authOptions);
-    if (!session) {
-      res.status(401).json({ message: "Unauthenticated" });
-    }
-    
+
     const friendRequests = await prisma.user.findUnique({
       where: {
         id: session.user.id,

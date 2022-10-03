@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconUserPlus, IconUserSearch } from "@tabler/icons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import AppModal from "../../../components/AppModal";
 import api from "../../../lib/api";
@@ -21,12 +21,19 @@ const FriendsTab = () => {
     searchTerm,
     400
   );
+  const isDebouncing = searchTerm !== debouncedSearchTerm;
 
-  const { data: friendRequests, refetch } = useQuery(
+  const { data: friendRequests, refetch: refetchFriendRequests } = useQuery(
     ["friendRequests"],
     api.getFriendRequests,
     { staleTime: Infinity } // never refetch friendRequests automatically
   );
+
+  const { mutate: createFriendRequest } = useMutation(api.createFriendRequest, {
+    onSuccess: () => {
+      refetchFriendRequests(); // refetch friendRequests to update UI
+    },
+  });
 
   const { data: users, isFetching } = useQuery(
     ["searchUsers", debouncedSearchTerm],
@@ -34,10 +41,13 @@ const FriendsTab = () => {
     {
       initialData: [],
       enabled: debouncedSearchTerm.length > 0,
+      keepPreviousData: true,
     }
   );
 
-  const isDebouncing = searchTerm !== debouncedSearchTerm;
+  const handleRequestFriendClick = (userId) => {
+    createFriendRequest(userId);
+  };
   const handleSearchTermChange = (event) => {
     const value = event.currentTarget.value;
     if (value === "") setDebouncedSearchTerm(value);
@@ -51,6 +61,8 @@ const FriendsTab = () => {
         <AppModal Icon={IconUserPlus} title="Add Friends">
           <Stack>
             <TextInput
+              value={searchTerm}
+              onChange={handleSearchTermChange}
               placeholder="Search for friends to add"
               icon={<IconUserSearch />}
               rightSection={
@@ -58,8 +70,6 @@ const FriendsTab = () => {
               }
               data-autofocus
               autoComplete="off"
-              value={searchTerm}
-              onChange={handleSearchTermChange}
             />
 
             {users.map((user) => (
@@ -75,7 +85,12 @@ const FriendsTab = () => {
                     </Text>
                   </div>
                 </Group>
-                <Button variant="filled" color compact>
+                <Button
+                  variant="filled"
+                  color
+                  compact
+                  onClick={() => handleRequestFriendClick(user.id)}
+                >
                   Request
                 </Button>
               </Group>
