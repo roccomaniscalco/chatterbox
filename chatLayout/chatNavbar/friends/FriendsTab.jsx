@@ -22,6 +22,12 @@ const FriendsTab = () => {
     400
   );
 
+  const { data: friendRequests, refetch } = useQuery(
+    ["friendRequests"],
+    api.getFriendRequests,
+    { staleTime: Infinity } // never refetch friendRequests automatically
+  );
+
   const { data: users, isFetching } = useQuery(
     ["searchUsers", debouncedSearchTerm],
     () => api.searchUsers(debouncedSearchTerm),
@@ -45,7 +51,7 @@ const FriendsTab = () => {
         <AppModal Icon={IconUserPlus} title="Add Friends">
           <Stack>
             <TextInput
-              placeholder="Search for friends to add..."
+              placeholder="Search for friends to add"
               icon={<IconUserSearch />}
               rightSection={
                 (isFetching || isDebouncing) && <Loader size="sm" />

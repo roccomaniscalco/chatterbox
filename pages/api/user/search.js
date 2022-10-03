@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 
 export default async function userSearch(req, res) {
   const { searchTerm } = req.query;
-  console.log("searchTerm", searchTerm);
 
   const users = await prisma.user.findMany({
     take: 5,
@@ -25,6 +24,5 @@ export default async function userSearch(req, res) {
     },
   });
 
-  console.log(users);
   res.json(users);
 }
