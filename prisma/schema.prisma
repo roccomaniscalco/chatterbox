@@ -49,6 +49,7 @@ enum FriendshipStatus {
 }
 
 model Friendship {
+  userPairId String           @id
   senderId   String
   receiverId String
   createdAt  DateTime         @default(now())
@@ -56,8 +57,6 @@ model Friendship {
   status     FriendshipStatus @default(REQUESTED)
   sender     User             @relation(name: "friendshipsSent", fields: [senderId], references: [id], onDelete: Cascade)
   receiver   User             @relation(name: "friendshipsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
-
-  @@id([senderId, receiverId])
 }
 
 model Channel {

@@ -39,7 +39,15 @@ export default async function userSearch(req, res) {
       },
     });
 
-    res.json(users);
+    res.json(
+      users.map((user) => ({
+        id: user.id,
+        name: user.name,
+        image: user.image,
+        email: user.email,
+        friendship: user.friendshipsReceived[0] || user.friendshipsSent[0],
+      }))
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to search users" });

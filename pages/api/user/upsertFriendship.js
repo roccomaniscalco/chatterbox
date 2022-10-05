@@ -8,18 +8,17 @@ export default async function upsertFriendship(req, res) {
   try {
     const session = await unstable_getServerSession(req, res, authOptions);
     const { receiverId, status } = req.body;
+    const userPairId = [session.user.id, receiverId].sort().join("_");
 
     const friendship = await prisma.friendship.upsert({
       where: {
-        senderId_receiverId: {
-          senderId: session.user.id,
-          receiverId,
-        },
+        userPairId,
       },
       create: {
         senderId: session.user.id,
         receiverId,
         status,
+        userPairId,
       },
       update: {
         status,
