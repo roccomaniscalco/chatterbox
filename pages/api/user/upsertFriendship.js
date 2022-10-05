@@ -4,7 +4,7 @@ import { authOptions } from "../../../lib/auth";
 
 const prisma = new PrismaClient();
 
-export default async function upsertFriendshipHandler(req, res) {
+export default async function upsertFriendship(req, res) {
   try {
     const session = await unstable_getServerSession(req, res, authOptions);
     const { receiverId, status } = req.body;
