@@ -9,49 +9,74 @@ import {
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconUserPlus, IconUserSearch } from "@tabler/icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import AppModal from "../../../components/AppModal";
 import api from "../../../lib/api";
+import { friendshipStatus } from "../../../lib/constants";
+
+const UserSearchResultsItem = ({ user }) => {
+  const queryClient = useQueryClient();
+
+  const { mutate: upsertFriendship, isLoading: isUpsertingFriendship } =
+    useMutation(api.upsertFriendship, {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(["searchUsers"]);
+      },
+    });
+
+  return (
+    <Group position="apart" spacing="xs" noWrap key={user.id}>
+      <Group spacing="xs" noWrap>
+        <Avatar src={user.image} />
+        <div>
+          <Text size="sm" lineClamp={1}>
+            {user.name}
+          </Text>
+          <Text size="xs" color="dimmed" lineClamp={1} mt={-2}>
+            {user.email}
+          </Text>
+        </div>
+      </Group>
+
+      <Button
+        onClick={() => upsertFriendship(user.id, friendshipStatus.REQUESTED)}
+        loading={isUpsertingFriendship}
+        variant="filled"
+        color
+        compact
+      >
+        Request
+      </Button>
+    </Group>
+  );
+};
 
 const AddFriendsModal = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useDebouncedValue(
-    searchTerm,
-    400
-  );
-  const isDebouncing = searchTerm !== debouncedSearchTerm;
+  const [debouncedSearchTerm] = useDebouncedValue(searchTerm, 400);
 
-  const { data: friendRequests, refetch: refetchFriendRequests } = useQuery(
-    ["friendRequests"],
-    api.getFriendRequests,
-    { staleTime: Infinity } // never refetch friendRequests automatically
-  );
-
-  const { mutate: createFriendRequest } = useMutation(api.createFriendRequest, {
-    onSuccess: () => {
-      refetchFriendRequests(); // refetch friendRequests to update UI
-    },
-  });
-
-  const { data: users, isFetching } = useQuery(
+  const { data: users, isFetching: isFetchingUsers } = useQuery(
     ["searchUsers", debouncedSearchTerm],
     () => api.searchUsers(debouncedSearchTerm),
     {
       initialData: [],
       enabled: debouncedSearchTerm.length > 0,
       keepPreviousData: true,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   );
 
-  const handleRequestFriendClick = (userId) => {
-    createFriendRequest(userId);
-  };
   const handleSearchTermChange = (event) => {
     const value = event.currentTarget.value;
-    if (value === "") setDebouncedSearchTerm(value);
     setSearchTerm(value);
   };
+
+  const showUserSearchResults = searchTerm.length > 0;
+  const showInputLoader =
+    searchTerm.length > 0 &&
+    (searchTerm !== debouncedSearchTerm || isFetchingUsers);
 
   return (
     <AppModal Icon={IconUserPlus} title="Add Friends">
@@ -59,36 +84,17 @@ const AddFriendsModal = () => {
         <TextInput
           value={searchTerm}
           onChange={handleSearchTermChange}
-          placeholder="Search for friends to add"
+          rightSection={showInputLoader && <Loader size="sm" />}
           icon={<IconUserSearch />}
-          rightSection={(isFetching || isDebouncing) && <Loader size="sm" />}
+          placeholder="Search for friends to add"
           data-autofocus
           autoComplete="off"
         />
 
-        {users.map((user) => (
-          <Group position="apart" spacing="xs" noWrap key={user.id}>
-            <Group spacing="xs" noWrap>
-              <Avatar src={user.image} />
-              <div>
-                <Text size="sm" lineClamp={1}>
-                  {user.name}
-                </Text>
-                <Text size="xs" color="dimmed" lineClamp={1} mt={-2}>
-                  {user.email}
-                </Text>
-              </div>
-            </Group>
-            <Button
-              variant="filled"
-              color
-              compact
-              onClick={() => handleRequestFriendClick(user.id)}
-            >
-              Request
-            </Button>
-          </Group>
-        ))}
+        {showUserSearchResults &&
+          users.map((user) => (
+            <UserSearchResultsItem user={user} key={user.id} />
+          ))}
       </Stack>
     </AppModal>
   );
