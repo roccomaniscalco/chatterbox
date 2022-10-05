@@ -16,6 +16,7 @@ import api from "../../../lib/api";
 import { friendshipStatus } from "../../../lib/constants";
 
 const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
+  // user is already a friend
   if (user.friendship?.status === friendshipStatus.ACCEPTED)
     return (
       <Group spacing={4}>
@@ -24,6 +25,7 @@ const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
       </Group>
     );
 
+  // user has received a friend request
   if (
     user.friendship?.status === friendshipStatus.REQUESTED &&
     user.id === user.friendship?.receiverId
@@ -37,7 +39,6 @@ const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
           })
         }
         loading={isUpsertingFriendship}
-        variant="filled"
         color
         compact
       >
@@ -45,6 +46,7 @@ const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
       </Button>
     );
 
+  // user has sent a friend request
   if (
     user.friendship?.status === friendshipStatus.REQUESTED &&
     user.id === user.friendship?.senderId
@@ -59,7 +61,6 @@ const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
             })
           }
           loading={isUpsertingFriendship}
-          variant="filled"
           color="green"
           compact
         >
@@ -73,7 +74,6 @@ const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
             })
           }
           loading={isUpsertingFriendship}
-          variant="filled"
           color="red"
           compact
         >
@@ -82,6 +82,7 @@ const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
       </Group>
     );
 
+  // user is not a friend or has declined a friend request
   return (
     <Button
       onClick={() =>
@@ -91,7 +92,6 @@ const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
         })
       }
       loading={isUpsertingFriendship}
-      variant="filled"
       color
       compact
     >
