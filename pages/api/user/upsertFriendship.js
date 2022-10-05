@@ -21,6 +21,8 @@ export default async function upsertFriendship(req, res) {
         userPairId,
       },
       update: {
+        senderId: session.user.id,
+        receiverId,
         status,
       },
     });

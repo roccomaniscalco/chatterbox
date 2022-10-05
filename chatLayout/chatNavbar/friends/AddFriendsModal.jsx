@@ -8,14 +8,99 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
-import { IconUserPlus, IconUserSearch } from "@tabler/icons";
+import { IconCheck, IconUserPlus, IconUserSearch } from "@tabler/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import AppModal from "../../../components/AppModal";
 import api from "../../../lib/api";
 import { friendshipStatus } from "../../../lib/constants";
 
-const UserSearchResultsItem = ({ user }) => {
+const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
+  if (user.friendship?.status === friendshipStatus.ACCEPTED)
+    return (
+      <Group spacing={4}>
+        <IconCheck size={16} />
+        <Text size="sm">Added</Text>
+      </Group>
+    );
+
+  if (
+    user.friendship?.status === friendshipStatus.REQUESTED &&
+    user.id === user.friendship?.receiverId
+  )
+    return (
+      <Button
+        onClick={() =>
+          upsertFriendship({
+            receiverId: user.id,
+            status: friendshipStatus.DECLINED,
+          })
+        }
+        loading={isUpsertingFriendship}
+        variant="filled"
+        color
+        compact
+      >
+        Unsend Request
+      </Button>
+    );
+
+  if (
+    user.friendship?.status === friendshipStatus.REQUESTED &&
+    user.id === user.friendship?.senderId
+  )
+    return (
+      <Group spacing="xs" noWrap>
+        <Button
+          onClick={() =>
+            upsertFriendship({
+              receiverId: user.id,
+              status: friendshipStatus.ACCEPTED,
+            })
+          }
+          loading={isUpsertingFriendship}
+          variant="filled"
+          color="green"
+          compact
+        >
+          Accept
+        </Button>
+        <Button
+          onClick={() =>
+            upsertFriendship({
+              receiverId: user.id,
+              status: friendshipStatus.DECLINED,
+            })
+          }
+          loading={isUpsertingFriendship}
+          variant="filled"
+          color="red"
+          compact
+        >
+          Decline
+        </Button>
+      </Group>
+    );
+
+  return (
+    <Button
+      onClick={() =>
+        upsertFriendship({
+          receiverId: user.id,
+          status: friendshipStatus.REQUESTED,
+        })
+      }
+      loading={isUpsertingFriendship}
+      variant="filled"
+      color
+      compact
+    >
+      Request
+    </Button>
+  );
+};
+
+const User = ({ user }) => {
   const queryClient = useQueryClient();
 
   const { mutate: upsertFriendship, isLoading: isUpsertingFriendship } =
@@ -38,16 +123,11 @@ const UserSearchResultsItem = ({ user }) => {
           </Text>
         </div>
       </Group>
-
-      <Button
-        onClick={() => upsertFriendship(user.id, friendshipStatus.REQUESTED)}
-        loading={isUpsertingFriendship}
-        variant="filled"
-        color
-        compact
-      >
-        Request
-      </Button>
+      <UserAction
+        user={user}
+        upsertFriendship={upsertFriendship}
+        isUpsertingFriendship={isUpsertingFriendship}
+      />
     </Group>
   );
 };
@@ -63,8 +143,6 @@ const AddFriendsModal = () => {
       initialData: [],
       enabled: debouncedSearchTerm.length > 0,
       keepPreviousData: true,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
     }
   );
 
@@ -73,7 +151,7 @@ const AddFriendsModal = () => {
     setSearchTerm(value);
   };
 
-  const showUserSearchResults = searchTerm.length > 0;
+  const showUsers = searchTerm.length > 0;
   const showInputLoader =
     searchTerm.length > 0 &&
     (searchTerm !== debouncedSearchTerm || isFetchingUsers);
@@ -90,11 +168,7 @@ const AddFriendsModal = () => {
           data-autofocus
           autoComplete="off"
         />
-
-        {showUserSearchResults &&
-          users.map((user) => (
-            <UserSearchResultsItem user={user} key={user.id} />
-          ))}
+        {showUsers && users.map((user) => <User user={user} key={user.id} />)}
       </Stack>
     </AppModal>
   );
