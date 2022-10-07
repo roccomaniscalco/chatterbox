@@ -3,6 +3,7 @@ import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import {
   IconLink,
+  IconMessagePlus,
   IconPencil,
   IconPhoto,
   IconPlus,
@@ -11,9 +12,10 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import AppModal from "../../../components/AppModal";
 import api from "../../../lib/api";
 
-const NewChannelForm = () => {
+const NewChannelModal = () => {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -78,58 +80,62 @@ const NewChannelForm = () => {
   };
 
   return (
-    <form onSubmit={channelForm.onSubmit(handleSubmit)}>
-      <Stack spacing="md">
-        <TextInput
-          label="Slug"
-          description="Channel slugs are unique and cannot be changed."
-          icon={
-            <>
-              <IconLink />
-              <Text size="sm">chatterbox.lol/</Text>
-            </>
-          }
-          iconWidth={133}
-          styles={{ icon: { justifyContent: "start", paddingLeft: 8, gap: 8 } }}
-          withAsterisk
-          autoComplete="off"
-          data-autofocus
-          maxLength={191}
-          {...channelForm.getInputProps("slug")}
-        />
-        <TextInput
-          label="Name"
-          icon={<IconSignature />}
-          withAsterisk
-          autoComplete="off"
-          maxLength={191}
-          {...channelForm.getInputProps("name")}
-        />
-        <TextInput
-          label="Image Url"
-          icon={<IconPhoto />}
-          autoComplete="off"
-          {...channelForm.getInputProps("image")}
-        />
-        <Textarea
-          label="Description"
-          icon={<IconPencil />}
-          styles={{ icon: { height: 36 } }}
-          autoComplete="off"
-          maxLength={191}
-          {...channelForm.getInputProps("description")}
-        />
-        <Button
-          mt="xl"
-          leftIcon={<IconPlus size={16} />}
-          type="submit"
-          loading={createChannel.isLoading || channelExists.isLoading}
-        >
-          Create Channel
-        </Button>
-      </Stack>
-    </form>
+    <AppModal Icon={IconMessagePlus} title="New Channel">
+      <form onSubmit={channelForm.onSubmit(handleSubmit)}>
+        <Stack spacing="md">
+          <TextInput
+            label="Slug"
+            description="Channel slugs are unique and cannot be changed."
+            icon={
+              <>
+                <IconLink />
+                <Text size="sm">chatterbox.lol/</Text>
+              </>
+            }
+            iconWidth={133}
+            styles={{
+              icon: { justifyContent: "start", paddingLeft: 8, gap: 8 },
+            }}
+            withAsterisk
+            autoComplete="off"
+            data-autofocus
+            maxLength={191}
+            {...channelForm.getInputProps("slug")}
+          />
+          <TextInput
+            label="Name"
+            icon={<IconSignature />}
+            withAsterisk
+            autoComplete="off"
+            maxLength={191}
+            {...channelForm.getInputProps("name")}
+          />
+          <TextInput
+            label="Image Url"
+            icon={<IconPhoto />}
+            autoComplete="off"
+            {...channelForm.getInputProps("image")}
+          />
+          <Textarea
+            label="Description"
+            icon={<IconPencil />}
+            styles={{ icon: { height: 36 } }}
+            autoComplete="off"
+            maxLength={191}
+            {...channelForm.getInputProps("description")}
+          />
+          <Button
+            mt="xl"
+            leftIcon={<IconPlus size={16} />}
+            type="submit"
+            loading={createChannel.isLoading || channelExists.isLoading}
+          >
+            Create Channel
+          </Button>
+        </Stack>
+      </form>
+    </AppModal>
   );
 };
 
-export default NewChannelForm;
+export default NewChannelModal;

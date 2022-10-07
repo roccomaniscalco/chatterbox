@@ -1,21 +1,12 @@
 import { Stack, Text } from "@mantine/core";
-import { IconMessagePlus } from "@tabler/icons";
-import AppModal from "../../../components/AppModal";
 import TabHeader from "../TabHeader";
 import Channels from "./Channels";
-import NewChannelForm from "./NewChannelForm";
+import NewChannelModal from "./NewChannelForm";
 
 const ChatTab = () => {
   return (
     <>
-      <TabHeader
-        title="Chat"
-        actionItem={
-          <AppModal Icon={IconMessagePlus} title="New Channel">
-            <NewChannelForm />
-          </AppModal>
-        }
-      />
+      <TabHeader title="Chat" actionItem={<NewChannelModal />} />
       <Stack>
         <Stack spacing={0}>
           <Text size="sm" color="dimmed" pb={6} px="md">
