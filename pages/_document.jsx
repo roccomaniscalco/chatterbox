@@ -38,7 +38,7 @@ export default class _Document extends Document {
             property="og:description"
             content="Begin chatting with friends directly from your browser"
           />
-          <meta property="og:image" content="/android-chrome-512x512.png" />
+          <meta property="og:image" content="https://chatterbox.lol/android-chrome-512x512.png" />
         </Head>
         <body>
           <Main />
