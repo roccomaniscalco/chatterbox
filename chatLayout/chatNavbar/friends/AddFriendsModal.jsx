@@ -15,7 +15,24 @@ import AppModal from "../../../components/AppModal";
 import api from "../../../lib/api";
 import { friendshipStatus } from "../../../lib/constants";
 
-const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
+const UserAction = ({ user }) => {
+  const queryClient = useQueryClient();
+  const [statusBeingUpserted, setStatusBeingUpserted] = useState(null);
+
+  const { mutate: upsertFriendship, isLoading: isUpsertingFriendship } =
+    useMutation(api.upsertFriendship, {
+      mutationKey: ["upsertFriendship", user.id],
+      onMutate: ({ status }) => {
+        setStatusBeingUpserted(status);
+      },
+      onSuccess: () => {
+        return queryClient.invalidateQueries(["searchUsers"]);
+      },
+      onSettled: () => {
+        setStatusBeingUpserted(null);
+      },
+    });
+
   // user is already a friend
   if (user.friendship?.status === friendshipStatus.ACCEPTED)
     return (
@@ -53,32 +70,36 @@ const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
   )
     return (
       <Group spacing="xs" noWrap>
-        <Button
-          onClick={() =>
-            upsertFriendship({
-              receiverId: user.id,
-              status: friendshipStatus.ACCEPTED,
-            })
-          }
-          loading={isUpsertingFriendship}
-          color="green"
-          compact
-        >
-          Accept
-        </Button>
-        <Button
-          onClick={() =>
-            upsertFriendship({
-              receiverId: user.id,
-              status: friendshipStatus.DECLINED,
-            })
-          }
-          loading={isUpsertingFriendship}
-          color="red"
-          compact
-        >
-          Decline
-        </Button>
+        {statusBeingUpserted !== friendshipStatus.DECLINED && (
+          <Button
+            onClick={() =>
+              upsertFriendship({
+                receiverId: user.id,
+                status: friendshipStatus.ACCEPTED,
+              })
+            }
+            loading={isUpsertingFriendship}
+            color="green"
+            compact
+          >
+            Accept
+          </Button>
+        )}
+        {statusBeingUpserted !== friendshipStatus.ACCEPTED && (
+          <Button
+            onClick={() =>
+              upsertFriendship({
+                receiverId: user.id,
+                status: friendshipStatus.DECLINED,
+              })
+            }
+            loading={isUpsertingFriendship}
+            color="red"
+            compact
+          >
+            Decline
+          </Button>
+        )}
       </Group>
     );
 
@@ -97,38 +118,6 @@ const UserAction = ({ user, upsertFriendship, isUpsertingFriendship }) => {
     >
       Request
     </Button>
-  );
-};
-
-const User = ({ user }) => {
-  const queryClient = useQueryClient();
-
-  const { mutate: upsertFriendship, isLoading: isUpsertingFriendship } =
-    useMutation(api.upsertFriendship, {
-      onSuccess: () => {
-        return queryClient.invalidateQueries(["searchUsers"]);
-      },
-    });
-
-  return (
-    <Group position="apart" spacing="xs" noWrap key={user.id}>
-      <Group spacing="xs" noWrap>
-        <Avatar src={user.image} />
-        <div>
-          <Text size="sm" lineClamp={1}>
-            {user.name}
-          </Text>
-          <Text size="xs" color="dimmed" lineClamp={1} mt={-2}>
-            {user.email}
-          </Text>
-        </div>
-      </Group>
-      <UserAction
-        user={user}
-        upsertFriendship={upsertFriendship}
-        isUpsertingFriendship={isUpsertingFriendship}
-      />
-    </Group>
   );
 };
 
@@ -168,7 +157,23 @@ const AddFriendsModal = () => {
           data-autofocus
           autoComplete="off"
         />
-        {showUsers && users.map((user) => <User user={user} key={user.id} />)}
+        {showUsers &&
+          users.map((user) => (
+            <Group position="apart" spacing="xs" noWrap key={user.id}>
+              <Group spacing="xs" noWrap>
+                <Avatar src={user.image} />
+                <div>
+                  <Text size="sm" lineClamp={1}>
+                    {user.name}
+                  </Text>
+                  <Text size="xs" color="dimmed" lineClamp={1} mt={-2}>
+                    {user.email}
+                  </Text>
+                </div>
+              </Group>
+              <UserAction user={user} />
+            </Group>
+          ))}
       </Stack>
     </AppModal>
   );
