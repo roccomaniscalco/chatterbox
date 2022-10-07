@@ -27,18 +27,29 @@ export default class _Document extends Document {
             sizes="16x16"
             href="images/favicon-16x16.png"
           />
-          <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#010409" />
+          <link
+            rel="mask-icon"
+            href="images/safari-pinned-tab.svg"
+            color="#010409"
+          />
           <meta name="msapplication-TileColor" content="#603cba" />
           <meta name="theme-color" content="#010409" />
           <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://chatterbox.lol"/>
-          <meta property="og:title" content="chatterbox | Chat your box away" />
+          <meta property="og:url" content="https://chatterbox.lol" />
+          <meta property="og:title" content="chatterbox" />
+          <meta
+            property="og:image"
+            content="https://chatterbox.lol/images/chatterbox-link-preview.jpg"
+          />
           <meta
             property="og:description"
-            content="Begin chatting with friends directly from your browser"
+            content="Chat your box away."
           />
-          <meta name="twitter:card" content="summary_large_image"/>
-          <meta name="image" property="og:image" content="https://chatterbox.lol/images/chatterbox-link-preview.jpg" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta
+            name="twitter:image"
+            content="https://chatterbox.lol/images/chatterbox-link-preview.jpg"
+          />
         </Head>
         <body>
           <Main />
