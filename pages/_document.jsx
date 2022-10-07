@@ -30,6 +30,15 @@ export default class _Document extends Document {
           <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#010409" />
           <meta name="msapplication-TileColor" content="#603cba" />
           <meta name="theme-color" content="#010409" />
+          <meta property="og:url" content="https://chatterbox.lol" />
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="chatterbox | Chat your box away" />
+          <meta name="twitter:card" content="summary" />
+          <meta
+            property="og:description"
+            content="Begin chatting with friends directly from your browser"
+          />
+          <meta property="og:image" content="/android-chrome-512x512.png" />
         </Head>
         <body>
           <Main />

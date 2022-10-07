@@ -21,7 +21,10 @@ const MyApp = ({
       <Head>
         <title>chatterbox</title>
       </Head>
-      <ThemeProvider initialColorScheme={colorScheme} initialPrimaryColor={primaryColor}>
+      <ThemeProvider
+        initialColorScheme={colorScheme}
+        initialPrimaryColor={primaryColor}
+      >
         <NotificationsProvider>
           <QueryClientProvider client={queryClient}>
             <SessionProvider session={session}>
@@ -39,7 +42,7 @@ MyApp.getInitialProps = async (context) => {
   return {
     ...appProps,
     colorScheme: getCookie("color-scheme", context.ctx) || "light",
-    primaryColor: getCookie("primary-color", context.ctx) || "blue"
+    primaryColor: getCookie("primary-color", context.ctx) || "blue",
   };
 };
 export default MyApp;
