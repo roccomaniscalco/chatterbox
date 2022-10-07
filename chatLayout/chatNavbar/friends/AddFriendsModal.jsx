@@ -1,15 +1,24 @@
 import {
   Avatar,
   Button,
+  CopyButton,
   Group,
   Loader,
   Stack,
   Text,
   TextInput,
+  Tooltip,
+  UnstyledButton,
 } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
-import { IconCheck, IconUserPlus, IconUserSearch } from "@tabler/icons";
+import {
+  IconCheck,
+  IconCopy,
+  IconUserPlus,
+  IconUserSearch,
+} from "@tabler/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import AppModal from "../../../components/AppModal";
 import api from "../../../lib/api";
@@ -122,6 +131,7 @@ const UserAction = ({ user }) => {
 };
 
 const AddFriendsModal = () => {
+  const { data: session } = useSession();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm] = useDebouncedValue(searchTerm, 400);
 
@@ -157,7 +167,7 @@ const AddFriendsModal = () => {
           data-autofocus
           autoComplete="off"
         />
-        {showUsers &&
+        {showUsers ? (
           users.map((user) => (
             <Group position="apart" spacing="xs" noWrap key={user.id}>
               <Group spacing="xs" noWrap>
@@ -173,7 +183,47 @@ const AddFriendsModal = () => {
               </Group>
               <UserAction user={user} />
             </Group>
-          ))}
+          ))
+        ) : (
+          <CopyButton
+            value={`https://chatterbox.lol/invite/${session?.user?.id}`}
+            timeout={2000}
+          >
+            {({ copied, copy }) => (
+              <Tooltip
+                label={copied ? "Copied" : "Copy"}
+                withArrow
+                position="right"
+                sx={{ isolation: "isolate" }}
+              >
+                <UnstyledButton
+                  p="sm"
+                  radius="sm"
+                  onClick={copy}
+                  sx={(theme) => ({
+                    borderRadius: theme.radius.sm,
+                    border: `1px solid ${theme.colors.dark[6]}`,
+                    "&:hover": {
+                      backgroundColor: theme.colors.dark[8],
+                    },
+                  })}
+                >
+                  <Group noWrap position="apart" spacing="xs">
+                    <div>
+                      <Text size="xs" color="dimmed">
+                        Share profile link
+                      </Text>
+                      <Text lineClamp={1} size="sm">
+                        https://chatterbox.lol/invite/{session?.user?.id}
+                      </Text>
+                    </div>
+                    {copied ? <IconCheck /> : <IconCopy />}
+                  </Group>
+                </UnstyledButton>
+              </Tooltip>
+            )}
+          </CopyButton>
+        )}
       </Stack>
     </AppModal>
   );
