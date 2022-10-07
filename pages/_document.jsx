@@ -36,14 +36,14 @@ export default class _Document extends Document {
           <meta name="theme-color" content="#010409" />
           <meta property="og:type" content="website" />
           <meta property="og:url" content="https://chatterbox.lol" />
-          <meta property="og:title" content="chatterbox" />
+          <meta property="og:title" content="chatterbox | Chat your box away" />
           <meta
             property="og:image"
             content="https://chatterbox.lol/images/chatterbox-link-preview.jpg"
           />
           <meta
             property="og:description"
-            content="Chat your box away."
+            content="Open-source messaging app built for the browser."
           />
           <meta name="twitter:card" content="summary_large_image" />
           <meta
