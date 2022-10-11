@@ -22,13 +22,13 @@ const SpecificChat = () => {
           ) : (
             <Group spacing="xs" noWrap>
               <Avatar src={channel.image}>{channel.name[0]}</Avatar>
-              <Title order={4} lineClamp={1}>
+              <Title order={4} lineClamp={1} sx={{lineBreak: "anywhere"}}>
                 {channel.name}
               </Title>
             </Group>
           )}
           {isLoading ? (
-            <Group spacing={0}>
+            <Group spacing={0} noWrap>
               <Skeleton
                 height={34}
                 circle
