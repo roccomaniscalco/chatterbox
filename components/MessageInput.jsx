@@ -58,6 +58,8 @@ const MessageInput = () => {
   const [isFocused, setIsFocused] = useState(false);
   const textAreaRef = useRef();
   useHotkeys([["mod+J", () => textAreaRef.current.focus()]]);
+
+  // useOs will result in hydration mismatch if used on server
   const os = useOs();
 
   const switchOs = () => {
