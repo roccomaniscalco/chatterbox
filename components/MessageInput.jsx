@@ -1,8 +1,7 @@
-import { ActionIcon, createStyles, Textarea, Tooltip } from "@mantine/core";
-import { getHotkeyHandler, useWindowEvent } from "@mantine/hooks";
+import { ActionIcon, createStyles, Kbd, Textarea } from "@mantine/core";
+import { getHotkeyHandler, useHotkeys, useOs } from "@mantine/hooks";
 import { IconSend } from "@tabler/icons";
 import { useSession } from "next-auth/react";
-import { func } from "prop-types";
 import { useRef, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
@@ -18,12 +17,6 @@ const useStyles = createStyles((theme) => ({
       theme.colorScheme === "dark"
         ? theme.colors.dark[7]
         : theme.colors.gray[2],
-    "&:focus, &:focus-within": {
-      borderColor:
-        theme.colorScheme === "dark"
-          ? `${theme.colors.dark[5]} !important`
-          : `${theme.colors.gray[5]} !important`,
-    },
     "&::placeholder": {
       color:
         theme.colorScheme === "dark"
@@ -49,17 +42,30 @@ const useStyles = createStyles((theme) => ({
           : theme.colors.gray[5],
     },
   },
+  kbd: {
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[9] : theme.white,
+    border: `${
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[2]
+    } 1px solid`,
+  },
 }));
 
 const MessageInput = () => {
   const { data: session } = useSession();
   const { classes } = useStyles();
   const [value, setValue] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const textAreaRef = useRef();
-  useWindowEvent("keypress", (e) => {
-    if (e.key === "Enter") return;
-    textAreaRef.current.focus();
-  });
+  useHotkeys([["mod+J", () => textAreaRef.current.focus()]]);
+  const os = useOs();
+
+  const switchOs = () => {
+    if (os === "macos") return { kbd: "⌘ + J", kbdWidth: 64 };
+    if (os === "windows") return { kbd: "Ctrl + J", kbdWidth: 84 };
+    if (os === "linux") return { kbd: "Ctrl + J", kbdWidth: 84 };
+    return undefined;
+  };
 
   // TODO: replace with mutation
   const sendMessage = async (content) => {
@@ -85,8 +91,13 @@ const MessageInput = () => {
     setValue("");
   };
 
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+
   return (
     <Textarea
+      iconWidth={switchOs()?.kbdWidth}
+      icon={!isFocused && switchOs()?.kbd && <Kbd className={classes.kbd}>{switchOs().kbd}</Kbd>}
       rightSection={
         <ActionIcon
           onClick={handleSubmit}
@@ -99,8 +110,11 @@ const MessageInput = () => {
       rightSectionWidth={47}
       rightSectionProps={{ style: { height: 47 } }}
       value={value}
+      ref={textAreaRef}
       onChange={handleChange}
       onKeyDown={getHotkeyHandler([["Enter", handleSubmit]])}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       size="md"
       variant="filled"
       autosize
@@ -109,7 +123,6 @@ const MessageInput = () => {
       aria-label="Message input"
       autoComplete="off"
       classNames={{ root: classes.root, input: classes.input }}
-      ref={textAreaRef}
     />
   );
 };

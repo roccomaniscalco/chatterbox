@@ -1,5 +1,5 @@
 import { AppShell, Footer } from "@mantine/core";
-import MessageInput from "../components/MessageInput";
+import dynamic from "next/dynamic";
 import {
   FOOTER_HEIGHT,
   HEADER_HEIGHT,
@@ -7,6 +7,9 @@ import {
   NAVBAR_WIDTH,
 } from "../lib/constants";
 import ChatNavbar from "./chatNavbar/ChatNavbar";
+const MessageInput = dynamic(() => import("../components/MessageInput"), {
+  ssr: false,
+});
 
 const ChatLayout = ({ children }) => {
   const chatFooter = (
