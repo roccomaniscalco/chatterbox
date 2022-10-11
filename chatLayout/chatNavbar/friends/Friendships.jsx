@@ -11,12 +11,15 @@ const Friendships = () => {
     ["friendships"],
     api.getFriendships,
     {
+      staleTime: Infinity, // never refetch friends automatically
       select: (friendships) =>
+        // only show accepted friendships
         friendships.reduce((friendships, friendship) => {
           if (friendship.status === friendshipStatus.ACCEPTED)
             friendships.push({
               userPairId: friendship.userPairId,
               friendsSince: friendship.updatedAt,
+              // friend is the user in the friendship pair that is not the session user
               friend:
                 friendship.senderId === session.user.id
                   ? friendship.receiver
