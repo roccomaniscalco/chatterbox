@@ -11,7 +11,6 @@ const Friendships = () => {
     ["friendships"],
     api.getFriendships,
     {
-      staleTime: Infinity, // never refetch friends automatically
       select: (friendships) =>
         // only show accepted friendships
         friendships.reduce((friendships, friendship) => {
