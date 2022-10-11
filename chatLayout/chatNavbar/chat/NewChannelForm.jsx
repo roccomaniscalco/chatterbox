@@ -29,9 +29,9 @@ const NewChannelModal = () => {
       channelForm.reset();
       // show success notification
       showNotification({
-        title: "Channel Created",
+        title: "New Chatterbox Created",
         message: `Start chatting in "${channelForm.values.name}"`,
-        color: "teal",
+        color: "green",
       });
     },
   });
@@ -47,13 +47,13 @@ const NewChannelModal = () => {
     validate: {
       slug: (value) => {
         // ensure slug is not empty
-        if (!value) return "Channel slug is required";
+        if (!value) return "Slug is required";
         // only allow lowercase letters, numbers, and dashes
         if (!/^[a-z0-9-]*$/.test(value))
           return "Only lowercase letters, numbers, and dashes are allowed";
       },
       name: (value) => {
-        if (!value) return "Channel name is required";
+        if (!value) return "Name is required";
       },
     },
   });
@@ -64,7 +64,7 @@ const NewChannelModal = () => {
       onSuccess: (channelExists) => {
         // disallow slugs that are already taken
         if (channelExists)
-          channelForm.setFieldError("slug", "Channel slug is taken");
+          channelForm.setFieldError("slug", "Slug is taken");
         // create channel if slug is available
         else createChannel.mutate(formValues);
       },
@@ -72,12 +72,12 @@ const NewChannelModal = () => {
   };
 
   return (
-    <AppModal Icon={IconMessagePlus} title="New Channel">
+    <AppModal Icon={IconMessagePlus} title="New Chatterbox">
       <form onSubmit={channelForm.onSubmit(handleSubmit)}>
         <Stack spacing="md">
           <TextInput
             label="Slug"
-            description="Channel slugs are unique and cannot be changed."
+            description="Chatterbox slugs are unique and cannot be changed."
             icon={
               <>
                 <IconLink />
@@ -122,7 +122,7 @@ const NewChannelModal = () => {
             type="submit"
             loading={createChannel.isLoading || channelExists.isLoading}
           >
-            Create Channel
+            Create Chatterbox
           </Button>
         </Stack>
       </form>

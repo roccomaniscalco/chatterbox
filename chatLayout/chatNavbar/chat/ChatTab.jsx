@@ -7,14 +7,7 @@ const ChatTab = () => {
   return (
     <>
       <TabHeader title="Chat" actionItem={<NewChannelModal />} />
-      <Stack>
-        <Stack spacing={0}>
-          <Text size="sm" color="dimmed" pb={6} px="md">
-            Channels
-          </Text>
-          <Channels />
-        </Stack>
-      </Stack>
+      <Channels />
     </>
   );
 };

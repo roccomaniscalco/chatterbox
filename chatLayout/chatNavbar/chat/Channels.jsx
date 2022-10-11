@@ -47,13 +47,17 @@ const Channels = () => {
   );
 
   return (
-    <div style={{ height: "100%" }}>
+    <Stack spacing={0} pb="xl">
       {Object.values(sortedChannels).map((channel) => (
         <Link href={channel.slug || "#"} passHref key={channel.id}>
           <NavLink
             active={router.asPath === `/${channel.slug}`}
             classNames={{ root: classes.root, label: classes.label }}
-            icon={<Avatar src={channel.image} alt={channel.name}>{channel.name[0]}</Avatar>}
+            icon={
+              <Avatar src={channel.image} alt={channel.name}>
+                {channel.name[0]}
+              </Avatar>
+            }
             label={channel.name}
             description={`${channel._count.users} ${
               channel._count.users === 1 ? "member" : "members"
@@ -63,7 +67,7 @@ const Channels = () => {
           />
         </Link>
       ))}
-    </div>
+    </Stack>
   );
 };
 
