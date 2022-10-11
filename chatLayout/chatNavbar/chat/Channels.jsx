@@ -30,18 +30,18 @@ const Channels = () => {
   const { data: channels, isLoading } = useQuery(
     ["channels"],
     api.getChannelsByUser,
-    { staleTime: Infinity } // never refetch channels automatically
+    {
+      staleTime: Infinity, // never refetch channels automatically
+      select: (channels) =>
+        channels.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
+    }
   );
 
   if (isLoading) return <StackSkeleton />;
 
-  const sortedChannels = Object.values(channels).sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
-
   return (
     <Stack spacing={0} pb="xl">
-      {Object.values(sortedChannels).map((channel) => (
+      {channels.map((channel) => (
         <Link href={channel.slug || "#"} passHref key={channel.id}>
           <NavLink
             active={router.asPath === `/${channel.slug}`}
