@@ -1,7 +1,6 @@
-import { Stack, Text } from "@mantine/core";
 import TabHeader from "../TabHeader";
 import Channels from "./Channels";
-import NewChannelModal from "./NewChannelForm";
+import NewChannelModal from "./NewChannelModal";
 
 const ChatTab = () => {
   return (
