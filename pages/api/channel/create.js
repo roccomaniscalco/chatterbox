@@ -1,10 +1,13 @@
 import { PrismaClient } from "@prisma/client";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "../../../lib/auth";
 
 const prisma = new PrismaClient();
 
 const createChannel = async (req, res) => {
   try {
-    const { slug, name, description, image, userId } = req.body;
+    const session = await unstable_getServerSession(req, res, authOptions);
+    const { slug, name, description, image } = req.body;
     const channel = await prisma.channel.create({
       data: {
         slug,
@@ -12,10 +15,10 @@ const createChannel = async (req, res) => {
         description,
         image,
         users: {
-          connect: [{ id: userId }],
+          connect: [{ id: session.user.id }],
         },
         admin: {
-          connect: { id: userId },
+          connect: { id: session.user.id },
         },
       },
     });

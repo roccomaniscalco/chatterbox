@@ -10,13 +10,11 @@ import {
   IconSignature,
 } from "@tabler/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import AppModal from "../../../components/AppModal";
 import api from "../../../lib/api";
 
 const NewChannelModal = () => {
-  const { data: session } = useSession();
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -44,7 +42,6 @@ const NewChannelModal = () => {
       name: "",
       description: "",
       image: "",
-      userId: "",
     },
     validateInputOnChange: ["name", "slug"],
     validate: {
@@ -69,12 +66,7 @@ const NewChannelModal = () => {
         if (channelExists)
           channelForm.setFieldError("slug", "Channel slug is taken");
         // create channel if slug is available
-        else {
-          createChannel.mutate({
-            ...formValues,
-            userId: session.user.id,
-          });
-        }
+        else createChannel.mutate(formValues);
       },
     });
   };
