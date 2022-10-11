@@ -60,7 +60,7 @@ const Channels = () => {
             }
             label={channel.name}
             description={`${channel._count.users} ${
-              channel._count.users === 1 ? "member" : "members"
+              channel._count.users === 1 ? "chatter" : "chatters"
             }`}
             px="md"
             component="a"
