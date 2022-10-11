@@ -1,6 +1,7 @@
-import { Avatar, NavLink, Skeleton, Stack } from "@mantine/core";
+import { Avatar, NavLink, Stack } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import StackSkeleton from "../../../components/StackSkeleton";
 import api from "../../../lib/api";
 
 const Friendships = () => {
@@ -21,15 +22,7 @@ const Friendships = () => {
     }
   );
 
-  if (isLoading)
-    return (
-      <Stack p="md">
-        <Skeleton width="100%" height="40px" />
-        <Skeleton width="100%" height="40px" />
-        <Skeleton width="100%" height="40px" />
-        <Skeleton width="100%" height="40px" />
-      </Stack>
-    );
+  if (isLoading) return <StackSkeleton />;
 
   return (
     <Stack sx={{ width: "100%" }}>
