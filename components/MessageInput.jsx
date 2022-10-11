@@ -42,7 +42,11 @@ const useStyles = createStyles((theme) => ({
           : theme.colors.gray[5],
     },
   },
+  rightSection: {
+    pointerEvents: "none",
+  },
   kbd: {
+    fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`,
     backgroundColor:
       theme.colorScheme === "dark" ? theme.colors.dark[9] : theme.white,
     border: `${
@@ -125,7 +129,11 @@ const MessageInput = () => {
       placeholder="Send a message"
       aria-label="Message input"
       autoComplete="off"
-      classNames={{ root: classes.root, input: classes.input }}
+      classNames={{
+        root: classes.root,
+        input: classes.input,
+        rightSection: classes.rightSection,
+      }}
     />
   );
 };
