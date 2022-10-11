@@ -1,6 +1,5 @@
 import { Box, Group, Title } from "@mantine/core";
 import { node, string } from "prop-types";
-import React from "react";
 
 const TabHeader = ({ title, actionItem }) => {
   return (

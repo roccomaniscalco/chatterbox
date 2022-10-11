@@ -1,5 +1,4 @@
 import { Skeleton, Stack } from "@mantine/core";
-import React from "react";
 
 const StackSkeleton = () => {
   return (

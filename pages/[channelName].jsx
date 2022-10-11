@@ -22,7 +22,7 @@ const SpecificChat = () => {
           ) : (
             <Group spacing="xs" noWrap>
               <Avatar src={channel.image}>{channel.name[0]}</Avatar>
-              <Title order={4} lineClamp={1} sx={{lineBreak: "anywhere"}}>
+              <Title order={4} lineClamp={1} sx={{ lineBreak: "anywhere" }}>
                 {channel.name}
               </Title>
             </Group>
