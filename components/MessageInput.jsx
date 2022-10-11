@@ -63,9 +63,9 @@ const MessageInput = () => {
   const os = useOs();
 
   const switchOs = () => {
-    if (os === "macos") return { kbd: "⌘ + J", kbdWidth: 64 };
-    if (os === "windows") return { kbd: "Ctrl + J", kbdWidth: 84 };
-    if (os === "linux") return { kbd: "Ctrl + J", kbdWidth: 84 };
+    if (os === "macos") return { kbd: "⌘ + J", kbdWidth: 68 };
+    if (os === "windows") return { kbd: "Ctrl + J", kbdWidth: 89 };
+    if (os === "linux") return { kbd: "Ctrl + J", kbdWidth: 89 };
     return undefined;
   };
 
@@ -98,19 +98,20 @@ const MessageInput = () => {
 
   return (
     <Textarea
-      iconWidth={switchOs()?.kbdWidth}
-      icon={!isFocused && switchOs()?.kbd && <Kbd className={classes.kbd}>{switchOs().kbd}</Kbd>}
       rightSection={
-        <ActionIcon
-          onClick={handleSubmit}
-          disabled={value.length < 1}
-          className={classes.submitButton}
-        >
-          <IconSend size={16} />
-        </ActionIcon>
+        isFocused ? (
+          <ActionIcon
+            onClick={handleSubmit}
+            disabled={value.length < 1}
+            className={classes.submitButton}
+          >
+            <IconSend size={16} />
+          </ActionIcon>
+        ) : (
+          <Kbd className={classes.kbd}>{switchOs()?.kbd}</Kbd>
+        )
       }
-      rightSectionWidth={47}
-      rightSectionProps={{ style: { height: 47 } }}
+      rightSectionWidth={isFocused ? 47 : switchOs()?.kbdWidth}
       value={value}
       ref={textAreaRef}
       onChange={handleChange}
