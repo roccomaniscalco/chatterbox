@@ -7,7 +7,11 @@ const prisma = new PrismaClient();
 const createChannel = async (req, res) => {
   try {
     const session = await unstable_getServerSession(req, res, authOptions);
-    const { slug, name, description, image } = req.body;
+    // set each undefined value in body to null
+    const { slug, name, description, image } = Object.fromEntries(
+      Object.entries(req.body).map(([key, value]) => [key, value || null])
+    );
+
     const channel = await prisma.channel.create({
       data: {
         slug,
