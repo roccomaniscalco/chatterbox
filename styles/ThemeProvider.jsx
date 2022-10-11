@@ -49,6 +49,28 @@ const ThemeProvider = ({
           other: {
             setPrimaryColor,
           },
+          components: {
+            Skeleton: {
+              styles: (theme) => ({
+                root: {
+                  "&::before": {
+                    background: `${
+                      theme.colorScheme === "dark"
+                        ? theme.colors.dark[7]
+                        : theme.colors.gray[2]
+                    } !important`,
+                  },
+                  "&::after": {
+                    background: `${
+                      theme.colorScheme === "dark"
+                        ? theme.colors.dark[6]
+                        : theme.colors.gray[3]
+                    } !important`,
+                  },
+                },
+              }),
+            },
+          },
         }}
       >
         <Global
