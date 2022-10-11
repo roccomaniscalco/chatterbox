@@ -27,6 +27,7 @@ const UserAction = ({ user }) => {
         setStatusBeingUpserted(status);
       },
       onSuccess: () => {
+        queryClient.invalidateQueries(["friendships"]);
         return queryClient.invalidateQueries(["searchUsers"]);
       },
       onSettled: () => {

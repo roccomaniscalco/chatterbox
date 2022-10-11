@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import StackSkeleton from "../../../components/StackSkeleton";
 import api from "../../../lib/api";
+import { friendshipStatus } from "../../../lib/constants";
 
 const Friendships = () => {
   const { data: session } = useSession();
@@ -11,14 +12,18 @@ const Friendships = () => {
     api.getFriendships,
     {
       select: (friendships) =>
-        friendships.map((friendship) => ({
-          userPairId: friendship.userPairId,
-          friendsSince: friendship.updatedAt,
-          friend:
-            friendship.senderId === session.user.id
-              ? friendship.receiver
-              : friendship.sender,
-        })),
+        friendships.reduce((friendships, friendship) => {
+          if (friendship.status === friendshipStatus.ACCEPTED)
+            friendships.push({
+              userPairId: friendship.userPairId,
+              friendsSince: friendship.updatedAt,
+              friend:
+                friendship.senderId === session.user.id
+                  ? friendship.receiver
+                  : friendship.sender,
+            });
+          return friendships;
+        }, []),
     }
   );
 
@@ -26,7 +31,7 @@ const Friendships = () => {
 
   return (
     <Stack sx={{ width: "100%" }}>
-      {friendships?.map((friendship) => (
+      {friendships.map((friendship) => (
         <NavLink
           key={friendship.userPairId}
           icon={<Avatar src={friendship.friend.image} radius="xl" />}
