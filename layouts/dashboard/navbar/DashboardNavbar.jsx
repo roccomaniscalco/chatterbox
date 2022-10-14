@@ -134,13 +134,7 @@ const ChatNavbar = memo(function ChatNavbar({
   const [active, setActive] = useState(asideData[0]);
 
   const asideIcons = asideData.map((link) => (
-    <Tooltip
-      label={link.label}
-      position="right"
-      withArrow
-      transitionDuration={0}
-      key={link.label}
-    >
+    <Tooltip label={link.label} position="right" withArrow key={link.label}>
       <UnstyledButton
         onClick={() => setActive(link)}
         className={cx(classes.iconLink, {
@@ -165,7 +159,7 @@ const ChatNavbar = memo(function ChatNavbar({
         <Box pb="xl" mt="xs">
           <UserProfile />
         </Box>
-        {asideIcons}
+        <Tooltip.Group openDelay={500}>{asideIcons}</Tooltip.Group>
       </Navbar.Section>
 
       <Navbar.Section className={classes.header}></Navbar.Section>

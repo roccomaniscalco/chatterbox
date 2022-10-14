@@ -1,4 +1,4 @@
-import { ActionIcon, Modal, Text } from "@mantine/core";
+import { ActionIcon, Modal, Text, Tooltip } from "@mantine/core";
 import { bool, elementType, node, string } from "prop-types";
 import { useState } from "react";
 
@@ -28,9 +28,30 @@ const AppModal = ({ children, Icon, title, openInitially }) => {
         {children}
       </Modal>
 
-      <ActionIcon size="lg" onClick={handleOpen} aria-label={title}>
-        <Icon />
-      </ActionIcon>
+      <Tooltip
+        openDelay={500}
+        label={title}
+        position="top"
+        withArrow
+        withinPortal
+      >
+        <ActionIcon
+          size="md"
+          onClick={handleOpen}
+          aria-label={title}
+          sx={(theme) => ({
+            color:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[0]
+                : theme.colors.gray[7],
+            "&:hover": {
+              backgroundColor: "transparent",
+            },
+          })}
+        >
+          <Icon />
+        </ActionIcon>
+      </Tooltip>
     </>
   );
 };
