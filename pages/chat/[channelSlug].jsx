@@ -8,26 +8,42 @@ import { HEADER_HEIGHT } from "../../lib/constants";
 
 const SpecificChat = () => {
   const router = useRouter();
-  const { channelName } = router.query;
-  const { data: channel, isLoading } = useQuery(["channel", channelName], () =>
-    api.getChannel(channelName)
+  const { channelSlug } = router.query;
+
+  const { data: channelInfo, isLoading: isLoadingChannelInfo } = useQuery(
+    ["channels"],
+    api.getChannelsByUser,
+    {
+      staleTime: Infinity,
+      select: (channels) =>
+        channels.find((channel) => channel.slug === channelSlug),
+    }
+  );
+
+  const { data: channelUsers, isLoading: isLoadingChannelUsers } = useQuery(
+    ["channel", channelSlug],
+    () => api.getChannel(channelSlug),
+    {
+      staleTime: Infinity,
+      select: (channel) => channel.users,
+    }
   );
 
   return (
     <>
       <ChatHeader height={HEADER_HEIGHT}>
         <Group sx={{ height: "100%" }} position="apart" noWrap>
-          {isLoading ? (
+          {isLoadingChannelInfo ? (
             <Skeleton width={180} height={34} />
           ) : (
             <Group spacing="xs" noWrap>
-              <Avatar src={channel.image}>{channel.name[0]}</Avatar>
+              <Avatar src={channelInfo.image}>{channelInfo.name[0]}</Avatar>
               <Title order={4} lineClamp={1} sx={{ lineBreak: "anywhere" }}>
-                {channel.name}
+                {channelInfo.name}
               </Title>
             </Group>
           )}
-          {isLoading ? (
+          {isLoadingChannelUsers ? (
             <Group spacing={0} noWrap>
               <Skeleton
                 height={34}
@@ -43,7 +59,7 @@ const SpecificChat = () => {
             </Group>
           ) : (
             <Avatar.Group>
-              {channel.users.map((user) => (
+              {channelUsers.map((user) => (
                 <Avatar src={user.image} radius="xl" key={user.id}>
                   {user.name[0]}
                 </Avatar>
@@ -52,7 +68,7 @@ const SpecificChat = () => {
           )}
         </Group>
       </ChatHeader>
-      <Text pl="md">Chat in {channelName}</Text>
+      <Text pl="md">Chat in {channelSlug}</Text>
     </>
   );
 };
