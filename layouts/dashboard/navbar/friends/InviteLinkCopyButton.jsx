@@ -23,9 +23,16 @@ const InviteLinkCopyButton = () => {
             onClick={copy}
             sx={(theme) => ({
               borderRadius: theme.radius.sm,
-              border: `1px solid ${theme.colors.dark[6]}`,
+              border: `1px solid ${
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[6]
+                  : theme.colors.gray[1]
+              }`,
               "&:hover": {
-                backgroundColor: theme.colors.dark[8],
+                backgroundColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[8]
+                    : theme.colors.gray[2],
               },
             })}
           >
