@@ -1,10 +1,10 @@
 import { Avatar, Group, Skeleton, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import ChatHeader from "../chatLayout/ChatHeader";
-import ChatLayout from "../chatLayout/ChatLayout";
-import api from "../lib/api";
-import { HEADER_HEIGHT } from "../lib/constants";
+import ChatHeader from "../../chatLayout/ChatHeader";
+import ChatLayout from "../../chatLayout/ChatLayout";
+import api from "../../lib/api";
+import { HEADER_HEIGHT } from "../../lib/constants";
 
 const SpecificChat = () => {
   const router = useRouter();

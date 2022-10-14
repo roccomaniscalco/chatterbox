@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
+import { authOptions } from "../../../../lib/auth";
 
 const prisma = new PrismaClient();
 
-const getChannelsByUser = async (req, res) => {
+export default async function getAllChannels(req, res) {
   try {
     const session = await unstable_getServerSession(req, res, authOptions);
     const channels = await prisma.channel.findMany({
@@ -33,6 +33,4 @@ const getChannelsByUser = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Failed to get channels by user" });
   }
-};
-
-export default getChannelsByUser;
+}

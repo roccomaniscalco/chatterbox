@@ -42,9 +42,9 @@ const Channels = () => {
   return (
     <Stack spacing={0} pb="xl">
       {channels.map((channel) => (
-        <Link href={channel.slug || "#"} passHref key={channel.id}>
+        <Link href={`/chat/${channel.slug}`} passHref key={channel.id}>
           <NavLink
-            active={router.asPath === `/${channel.slug}`}
+            active={router.asPath === `/chat/${channel.slug}`}
             classNames={{ root: classes.root, label: classes.label }}
             icon={
               <Avatar src={channel.image} alt={channel.name}>

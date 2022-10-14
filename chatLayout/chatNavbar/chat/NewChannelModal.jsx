@@ -81,10 +81,10 @@ const NewChannelModal = () => {
             icon={
               <>
                 <IconLink />
-                <Text size="sm">chatterbox.lol/</Text>
+                <Text size="sm">chatterbox.lol/chat/</Text>
               </>
             }
-            iconWidth={133}
+            iconWidth={165}
             styles={{
               icon: { justifyContent: "start", paddingLeft: 8, gap: 8 },
             }}

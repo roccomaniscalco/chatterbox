@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "../../../lib/auth";
+import { authOptions } from "../../../../lib/auth";
 
 const prisma = new PrismaClient();
 
