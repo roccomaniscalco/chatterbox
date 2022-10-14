@@ -1,8 +1,8 @@
 import { Avatar, Group, Skeleton, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import ChatHeader from "../../chatLayout/ChatHeader";
-import ChatLayout from "../../chatLayout/ChatLayout";
+import ChatHeader from "../../layouts/dashboard/DashboardHeader";
+import DashboardLayout from "../../layouts/dashboard/DashboardLayout";
 import api from "../../lib/api";
 import { HEADER_HEIGHT } from "../../lib/constants";
 
@@ -58,7 +58,7 @@ const SpecificChat = () => {
 };
 
 SpecificChat.getLayout = (page) => {
-  return <ChatLayout>{page}</ChatLayout>;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default SpecificChat;

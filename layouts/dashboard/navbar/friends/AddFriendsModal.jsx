@@ -11,9 +11,8 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { IconCheck, IconUserPlus, IconUserSearch } from "@tabler/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import AppModal from "../../../components/AppModal";
-import api from "../../../lib/api";
-import { friendshipStatus } from "../../../lib/constants";
+import AppModal from "../../../../components/AppModal";
+import api from "../../../../lib/api";
 import InviteLinkCopyButton from "./InviteLinkCopyButton";
 
 const UserAction = ({ user }) => {

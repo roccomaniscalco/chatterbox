@@ -10,7 +10,8 @@ import {
 import { IconMessage, IconSettings, IconUsers } from "@tabler/icons";
 import { number } from "prop-types";
 import { memo, useState } from "react";
-import IconChatterbox from "../../components/IconChatterbox";
+import IconChatterbox from "../../../components/IconChatterbox";
+
 import ChatTab from "./chat/ChatTab";
 import FriendsTab from "./friends/FriendsTab";
 import SettingsTab from "./settings/SettingsTab";

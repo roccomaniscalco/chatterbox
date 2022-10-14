@@ -2,8 +2,8 @@ import { Avatar, createStyles, NavLink, Stack } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import StackSkeleton from "../../../components/StackSkeleton";
-import api from "../../../lib/api";
+import StackSkeleton from "../../../../components/StackSkeleton";
+import api from "../../../../lib/api";
 
 const useStyles = createStyles((theme) => ({
   root: {

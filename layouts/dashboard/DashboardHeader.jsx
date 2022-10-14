@@ -1,5 +1,5 @@
 import { Box } from "@mantine/core";
-import { HEADER_HEIGHT } from "../lib/constants";
+import { HEADER_HEIGHT } from "../../lib/constants";
 
 const ChatHeader = ({ children }) => {
   return (

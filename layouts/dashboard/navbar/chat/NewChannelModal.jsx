@@ -7,12 +7,12 @@ import {
   IconPencil,
   IconPhoto,
   IconPlus,
-  IconSignature,
+  IconSignature
 } from "@tabler/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import AppModal from "../../../components/AppModal";
-import api from "../../../lib/api";
+import AppModal from "../../../../components/AppModal";
+import api from "../../../../lib/api";
 
 const NewChannelModal = () => {
   const queryClient = useQueryClient();
@@ -63,8 +63,7 @@ const NewChannelModal = () => {
     channelExists.mutate(formValues.slug, {
       onSuccess: (channelExists) => {
         // disallow slugs that are already taken
-        if (channelExists)
-          channelForm.setFieldError("slug", "Slug is taken");
+        if (channelExists) channelForm.setFieldError("slug", "Slug is taken");
         // create channel if slug is available
         else createChannel.mutate(formValues);
       },

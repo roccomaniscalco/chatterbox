@@ -5,13 +5,13 @@ import {
   HEADER_HEIGHT,
   NAVBAR_ASIDE_WIDTH,
   NAVBAR_WIDTH,
-} from "../lib/constants";
-import ChatNavbar from "./chatNavbar/ChatNavbar";
-const MessageInput = dynamic(() => import("../components/MessageInput"), {
+} from "../../lib/constants";
+import ChatNavbar from "./navbar/DashboardNavbar";
+const MessageInput = dynamic(() => import("../../components/MessageInput"), {
   ssr: false,
 });
 
-const ChatLayout = ({ children }) => {
+const DashboardLayout = ({ children }) => {
   const chatFooter = (
     <Footer
       height={FOOTER_HEIGHT}
@@ -45,4 +45,4 @@ const ChatLayout = ({ children }) => {
   );
 };
 
-export default ChatLayout;
+export default DashboardLayout;

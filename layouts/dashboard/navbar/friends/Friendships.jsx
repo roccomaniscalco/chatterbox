@@ -1,9 +1,9 @@
 import { Avatar, NavLink, Stack } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import StackSkeleton from "../../../components/StackSkeleton";
-import api from "../../../lib/api";
-import { friendshipStatus } from "../../../lib/constants";
+import StackSkeleton from "../../../../components/StackSkeleton";
+import api from "../../../../lib/api";
+import { friendshipStatus } from "../../../../lib/constants";
 
 const Friendships = () => {
   const { data: session } = useSession();
