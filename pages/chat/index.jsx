@@ -3,7 +3,7 @@ import { useScrollIntoView } from "@mantine/hooks";
 import pusherJs from "pusher-js";
 import { useEffect, useState } from "react";
 import { flushSync } from "react-dom";
-import ChatLayout from "../../dashboard/ChatLayout";
+import ChatLayout from "../../layouts/dashboard/DashboardLayout";
 import Message from "../../components/Message";
 
 const Chat = () => {

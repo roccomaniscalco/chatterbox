@@ -12,10 +12,11 @@ const InviteLinkCopyButton = () => {
     <CopyButton value="https://chatterbox.lol" timeout={2000}>
       {({ copied, copy }) => (
         <Tooltip
+          openDelay={0}
+          closeDelay={500}
           label={copied ? "Copied" : "Copy"}
           withArrow
           position="right"
-          sx={{ isolation: "isolate" }}
         >
           <UnstyledButton
             p="sm"
@@ -28,15 +29,9 @@ const InviteLinkCopyButton = () => {
                   ? theme.colors.dark[6]
                   : theme.colors.gray[1]
               }`,
-              "&:hover": {
-                backgroundColor:
-                  theme.colorScheme === "dark"
-                    ? theme.colors.dark[8]
-                    : theme.colors.gray[2],
-              },
             })}
           >
-            <Group noWrap position="apart" spacing="xs">
+            <Group noWrap position="apart" spacing="xs">  
               <div>
                 <Text size="xs" color="dimmed">
                   Share profile link
