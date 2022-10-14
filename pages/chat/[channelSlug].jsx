@@ -10,7 +10,7 @@ const SpecificChat = () => {
   const router = useRouter();
   const { channelSlug } = router.query;
 
-  const { data: channelInfo, isLoading: isLoadingChannelInfo } = useQuery(
+  const { data: channelInfo } = useQuery(
     ["channels"],
     api.getChannelsByUser,
     {
@@ -33,7 +33,7 @@ const SpecificChat = () => {
     <>
       <ChatHeader height={HEADER_HEIGHT}>
         <Group sx={{ height: "100%" }} position="apart" noWrap>
-          {isLoadingChannelInfo ? (
+          {!channelInfo ? (
             <Skeleton width={180} height={34} />
           ) : (
             <Group spacing="xs" noWrap>
