@@ -13,23 +13,23 @@ export default class _Document extends Document {
           <link
             rel="apple-touch-icon"
             sizes="180x180"
-            href="images/apple-touch-icon.png"
+            href="/apple-touch-icon.png"
           />
           <link
             rel="icon"
             type="image/png"
             sizes="32x32"
-            href="images/favicon-32x32.png"
+            href="/favicon-32x32.png"
           />
           <link
             rel="icon"
             type="image/png"
             sizes="16x16"
-            href="images/favicon-16x16.png"
+            href="/favicon-16x16.png"
           />
           <link
             rel="mask-icon"
-            href="images/safari-pinned-tab.svg"
+            href="/safari-pinned-tab.svg"
             color="#010409"
           />
           <meta name="msapplication-TileColor" content="#603cba" />
@@ -39,7 +39,7 @@ export default class _Document extends Document {
           <meta property="og:title" content="chatterbox | Chat your box away" />
           <meta
             property="og:image"
-            content="https://chatterbox.lol/images/chatterbox-link-preview.jpg"
+            content="https://chatterbox.lol/chatterbox-link-preview.jpg"
           />
           <meta
             property="og:description"
@@ -48,7 +48,7 @@ export default class _Document extends Document {
           <meta name="twitter:card" content="summary_large_image" />
           <meta
             name="twitter:image"
-            content="https://chatterbox.lol/images/chatterbox-link-preview.jpg"
+            content="https://chatterbox.lol/chatterbox-link-preview.jpg"
           />
         </Head>
         <body>
