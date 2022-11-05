@@ -1,4 +1,12 @@
-import { Avatar, createStyles, NavLink, Stack } from "@mantine/core";
+import {
+  Avatar,
+  createStyles,
+  Group,
+  NavLink,
+  Stack,
+  Text,
+} from "@mantine/core";
+import { IconLock } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -51,10 +59,16 @@ const Channels = () => {
                 {channel.name[0]}
               </Avatar>
             }
-            label={channel.name}
-            description={`${channel._count.users} ${
-              channel._count.users === 1 ? "chatter" : "chatters"
-            }`}
+            label={<Text size="sm">{channel.name}</Text>}
+            description={
+              <Group noWrap spacing={8}>
+                <Text size="xs" color="dimmed">
+                  {channel._count.users}{" "}
+                  {channel._count.users === 1 ? "chatter" : "chatters"}
+                </Text>
+                {channel.isPrivate && <IconLock size={16} />}
+              </Group>
+            }
             px="md"
             component="a"
           />

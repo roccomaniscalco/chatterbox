@@ -15,6 +15,7 @@ export default async function getAllChannels(req, res) {
         slug: true,
         name: true,
         image: true,
+        isPrivate: true,
         createdAt: true,
         _count: {
           select: { users: true },

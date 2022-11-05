@@ -66,6 +66,7 @@ model Channel {
   name        String
   description String?
   image       String?   @db.Text
+  isPrivate   Boolean   @default(false)
   createdAt   DateTime  @default(now())
   messages    Message[]
   users       User[]

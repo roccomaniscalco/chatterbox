@@ -1,4 +1,11 @@
-import { Button, Stack, Text, Textarea, TextInput } from "@mantine/core";
+import {
+  Button,
+  Checkbox,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import {
@@ -7,7 +14,7 @@ import {
   IconPencil,
   IconPhoto,
   IconPlus,
-  IconSignature
+  IconSignature,
 } from "@tabler/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -42,6 +49,7 @@ const NewChannelModal = () => {
       name: "",
       description: "",
       image: "",
+      isPrivate: false,
     },
     validateInputOnChange: ["name", "slug"],
     validate: {
@@ -115,8 +123,13 @@ const NewChannelModal = () => {
             maxLength={191}
             {...channelForm.getInputProps("description")}
           />
+          <Checkbox
+            mt="xs"
+            label="This chatterbox is invite-only."
+            {...channelForm.getInputProps("isPrivate")}
+          />
           <Button
-            mt="xl"
+            mt="xs"
             leftIcon={<IconPlus size={16} />}
             type="submit"
             loading={createChannel.isLoading || channelExists.isLoading}
