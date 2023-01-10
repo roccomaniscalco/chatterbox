@@ -126,7 +126,7 @@ const NewChannelModal = () => {
           <Checkbox
             mt="xs"
             label="This chatterbox is invite-only."
-            {...channelForm.getInputProps("isPrivate")}
+            {...channelForm.getInputProps("isPrivate", { type: "checkbox" })}
           />
           <Button
             mt="xs"

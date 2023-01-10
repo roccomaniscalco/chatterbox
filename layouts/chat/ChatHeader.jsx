@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import api from "../../lib/api";
 import { HEADER_HEIGHT } from "../../lib/constants";
+import EditChannelModal from "./EditChannelModal";
 
 // only to be used in /pages/chat/[channelSlug]
 const ChatHeader = () => {
@@ -51,8 +52,10 @@ const ChatHeader = () => {
             <Title order={4} lineClamp={1} sx={{ lineBreak: "anywhere" }}>
               {channelInfo.name}
             </Title>
+            <EditChannelModal channelSlug={channelSlug} />
           </Group>
         )}
+
         {isLoadingChannelUsers ? (
           <Group spacing={0} noWrap>
             <Skeleton
